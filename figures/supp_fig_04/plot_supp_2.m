@@ -1,11 +1,9 @@
 function plot_supp_2(my_axes, S, param, axlabel_flag)
 
 ns_pre = S.ns_pre;
-% ns_post = S.ns_post;
 thr = .25;
 dset = S.dset;
 clear('S');
-
 
 time_const = 29.997;
 
@@ -29,7 +27,6 @@ for irat = 1:5
         day = days(iday);
         tstr = sprintf('Rat %d Day %d', rat, day - 21);
         speed = dset(irat, iday).speed;
-        %time = dset(irat, iday).time;
         n_trials = size(speed, 1);
         
         
@@ -38,18 +35,17 @@ for irat = 1:5
         max_speed = max(abs(r_speed), [], 2);
         idx_slow = max_speed < thr;
         
-        [ma, ima] = max(r_speed, [], 2);
-        [mi, imi] = max(-r_speed, [], 2);
+        [ma, ~] = max(r_speed, [], 2);
+        [mi, ~] = max(-r_speed, [], 2);
         idx_pos = (ma >= mi) & ~idx_slow;
         idx_neg = ~idx_pos & ~idx_slow;
         
         idxs = {idx_slow, idx_pos, idx_neg};
         
         c = c + 1;
-        %ax = subplot(5, 2, c);
         ax = my_axes{c};
         axes(ax);
-        %pbaspect(ax, [1 1 1])
+        
         ax.NextPlot = "add";
         ax.Title.String = tstr;
         ax.Title.FontWeight = "normal";
@@ -60,8 +56,10 @@ for irat = 1:5
         col = zeros(1, n_trials, 3);
         for i = 1:3
             idx = idxs{i};
-            plot(ma(idx), -mi(idx), '.', 'Color', param.color_options.cluster_colors(i, :))
-            col(1, idx, :) = repmat(param.color_options.cluster_colors(i, :), sum(idx), 1);
+            plot(ma(idx), -mi(idx), '.', 'Color', ...
+                param.color_options.cluster_colors(i, :))
+            col(1, idx, :) = ...
+                repmat(param.color_options.cluster_colors(i, :), sum(idx), 1);
             
         end
         % write counts
@@ -96,15 +94,11 @@ for irat = 1:5
         
     end
 end
-ax = my_axes{9}; %subplot(5, 2, 9);
+ax = my_axes{9};
 axes(ax);
-ax.XLabel.String = {"Max. speed" "[deg/sec]"};
+ax.XLabel.String = ["Max. speed" "[deg/sec]"];
 ax.XLabel.FontSize = param.fontsize_label;
-ax.YLabel.String = {"Min. speed", "[deg/sec]"};
+ax.YLabel.String = ["Min. speed", "[deg/sec]"];
 ax.YLabel.FontSize = param.fontsize_label;
-text(text_pos(3, 1) - .15, text_pos(3, 2), 'N = ', 'Units', 'normalized', 'HorizontalAlignment', text_horz_align{3}, 'FontSize', 7)
-%
-% set(fig.Children, 'FontName', 'Calibri'); %, 'FontSize', 10);
-% print('-r300', '-dpng', 'fig_behav_supp_2.png');
-% fig.Renderer = 'Painters';
-% print('-dsvg', 'fig_behav_supp_2.svg');
+text(text_pos(3, 1) - .15, text_pos(3, 2), 'N = ', 'Units', ...
+    'normalized', 'HorizontalAlignment', text_horz_align{3}, 'FontSize', 7)
