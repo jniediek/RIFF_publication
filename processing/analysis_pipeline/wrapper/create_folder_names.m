@@ -5,20 +5,13 @@ function folders = create_folder_names(expdata)
 
 folders = expdata.folders;
 
-goodman_home = fullfile('/', 'GoodmanHome');
+folders.base = folders.data_location;
 
-insert = '';
-insert_argos = '';
-insert_physcoa = '';
-
-
-folders.base = fullfile(goodman_home, 'Archive');
-
-logging = fullfile('physcoa', insert_physcoa, 'logging_data');
-maestro = fullfile('tydeus', insert, 'maestro_results');
-behavior = fullfile('anastrophe', insert, 'logging_data');
-camera = fullfile('argos', insert_argos, 'logging_data');
-deuteron_autologs = fullfile('physcoa', 'deuteron_autologs');
+logging = 'neural';
+maestro = 'control';
+behavior = 'behavior';
+camera = 'camera';
+deuteron_autologs = fullfile('neural', 'deuteron_autologs');
 
 
 t_date = sprintf('%02d%02d%02d', ...
@@ -33,11 +26,8 @@ c_date = sprintf('%02d-%02d-%02dT', ...
 a_date = sprintf('%04d-%02d-%02d', ...
     expdata.year, expdata.month, expdata.day);
 
-% append suffix according to experimenter
-if expdata.experimenter == "Ana"
-    folder_tgt = t_date;
-    
-elseif expdata.experimenter == "Maciej"
+   
+if expdata.experimenter == "Maciej"
     
     if expdata.year == 2018
         if ismember(expdata.month, [4, 5])
