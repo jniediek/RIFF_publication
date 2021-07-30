@@ -26,6 +26,6 @@ Jankowski M. M., Polterovich A., Kazakov A., Niediek J., Nelken I.: *The RIFF: a
   - [5 minutes behavioral session (link not active yet)](link not active yet)
 3. Unzip the downloaded sample session
 4. Navigate Matlab to the folder `processing/analysis_pipeline` in this repository and open the file `main.m` in the editor
-5. Change the variable `data_location` to the location of the downloaded sample session
-6. Change the variable `results_location` to your desired location for the output of results
+5. Change the variable `data_location` to the location of the folder `RIFF_data` from the downloaded, unzipped sample session (e.g., `data_location = '~/Downloads/RIFF_data'`)
+6. Change the variable `results_location` to your desired location for the output of results (e.g., `results_location = '~/RIFF_results`). This folder will be created if it does not exist already.
 7. Run the script `main.m`
