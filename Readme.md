@@ -2,7 +2,9 @@
 
 This repository contains code related to the publication
 
-Jankowski M. M., Polterovich A., Kazakov A., Niediek J., Nelken I.: *The RIFF: an automated environment for studying the neural basis of auditory-guided complex behavior*. Preprint, 2021.
+Jankowski M. M., Polterovich A., Kazakov A., Niediek J., Nelken I.: *The RIFF: an automated environment for studying the neural basis of auditory-guided complex behavior*.
+
+bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://doi.org/10.1101/2021.05.25.445564), Preprint 2021.
  
 
 ## Folder structure
@@ -23,7 +25,7 @@ Jankowski M. M., Polterovich A., Kazakov A., Niediek J., Nelken I.: *The RIFF: a
 ### Processing sample raw data
 1. Download/clone this repository
 2. Download a sample session from figshare
-  - [5 minutes behavioral session (link not active yet)](link not active yet)
+  - [5 minutes behavioral session](link not active yet)
 3. Unzip the downloaded sample session
 4. Navigate Matlab to the folder `processing/analysis_pipeline` in this repository and open the file `main.m` in the editor
 5. Change the variable `data_location` to the location of the folder `RIFF_data` from the downloaded, unzipped sample session (e.g., `data_location = '~/Downloads/RIFF_data'`)
