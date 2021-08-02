@@ -27,7 +27,7 @@ Note that some parts of the code require the *Curve Fitting Toolbox* and/or the 
 1. Download/clone this repository
 2. Download the sample session from figshare: [5 minutes behavioral session](https://doi.org/10.6084/m9.figshare.15082971).
 3. Unzip the downloaded sample session
-4. Navigate Matlab to the folder `processing` in this repository and add the folder `analysis_pipeline` to the Matlab path.
+4. Navigate Matlab to the folder `processing` in this repository and add the folder `analysis_pipeline` with subfolders to the Matlab path.
 5. Navigate Matlab to the folder `processing/analysis_pipeline` and open the file `main.m` in the editor
 6. Change the variable `data_location` to the location of the folder `RIFF_data` from the downloaded, unzipped sample session (e.g., `data_location = '~/Downloads/RIFF_data'`)
 7. Change the variable `results_location` to your desired location for the output of results (e.g., `results_location = '~/RIFF_results`). This folder will be created if it does not exist already.
