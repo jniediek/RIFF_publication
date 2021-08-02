@@ -16,18 +16,19 @@ bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://d
 |`processing` |  to process data generated in the RIFF |
 
 ## Instructions 
+Note that some parts of the code require the *Curve Fitting Toolbox* and/or the *Statistics and Machine Learning Toolbox*.
 
 ### Reproducing figures
 1. Download/clone this repository
 2. Navigate Matlab to the subfolder of the `figures` that you are interested in
-3. Run the main script in that folder, usually called `main.m` or similar
+3. Run the main script in that folder, called either `main.m` or similar to the name to the figure.
 
 ### Processing sample raw data
 1. Download/clone this repository
-2. Download a sample session from figshare
-  - [5 minutes behavioral session](link not active yet)
+2. Download the sample session from figshare: [5 minutes behavioral session](https://doi.org/10.6084/m9.figshare.15082971).
 3. Unzip the downloaded sample session
-4. Navigate Matlab to the folder `processing/analysis_pipeline` in this repository and open the file `main.m` in the editor
+4. Navigate Matlab to the folder `processing` in this repository and add the folder `analysis_pipeline` to the Matlab path.
+4. Navigate Matlab to the folder `processing/analysis_pipeline` and open the file `main.m` in the editor
 5. Change the variable `data_location` to the location of the folder `RIFF_data` from the downloaded, unzipped sample session (e.g., `data_location = '~/Downloads/RIFF_data'`)
 6. Change the variable `results_location` to your desired location for the output of results (e.g., `results_location = '~/RIFF_results`). This folder will be created if it does not exist already.
 7. Run the script `main.m`
