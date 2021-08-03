@@ -11,12 +11,15 @@ bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://d
 
 | Folder | Function of scripts |
 |--------|---------|
-| `control`| to operate the RIFF |
+| `acquisition`| to operate the RIFF |
 |`figures`| to create the figures in the publication|
 |`processing` |  to process data generated in the RIFF |
 
 ## Instructions 
 Note that some parts of the code require the *Curve Fitting Toolbox* and/or the *Statistics and Machine Learning Toolbox*.
+
+### The control code of the RIFF
+This code shows how the RIFF operates in detail. It is not intended to be run without hardware-specific modifications.
 
 ### Reproducing figures
 1. Download/clone this repository
