@@ -1,0 +1,28 @@
+function val = get(s_comp,prop_name)
+% GET Get s_comp property from the specified object
+% and return the value. Property names are: 
+switch prop_name
+case 'Swp_on'
+    val = s_comp.swp_on;
+case 'Swq_on'
+    val = s_comp.seq_on;
+case 'Static_value'
+    val = s_comp.static_value;
+case 'Sweep'
+    val = s_comp.sweep;
+case 'Mode'
+    val = swp.mode;
+case 'Step'
+    val = swp.step;
+case 'Seq_length'
+    val = swp.seq_length;
+otherwise
+    error([prop_name,' Is not a valid Sweep property'])
+end
+ s_comp.sweep=Sweep(varargin{1},varargin{2},varargin{3},varargin{4},varargin{5},varargin{6})
+	    s_comp.swp_on=1; 
+	    s_comp.seq_on=0;  
+	    s_comp.seq_values=[];
+	    s_comp.static_value=[];
+	    s_comp=class(s_comp,'Sig_comp');      
+	else

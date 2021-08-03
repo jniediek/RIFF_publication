@@ -1,0 +1,48 @@
+function  env = Envelope(varargin)
+%    Envelope class constructor.
+%   Envelope(name) constructs an envelope with a given name.
+%   Envelope(name,channel) constructs an envelope with a given name and with a
+%   given channel.
+%   Envelope is the base class of all Envelopes (MTF ...etc) .
+
+switch nargin
+case 0
+	% if no input arguments, create a default object
+	env.num_of_comps=0;
+    env.comp_list={};
+    env.comp_list_str={};
+	channel=1;
+	name='none';
+	sig=Signal(name,channel);
+	env=class(env,'Envelope',sig);
+
+case 1
+       if (isa(varargin{1},'Envelope'))
+            env = varargin{1}; 
+       elseif (isa(varargin{1},'char')
+            name=varargin{1};
+            channel=1;
+            sig=Signal(name,channel);
+            env=class(env,'Envelope',sig);
+        else
+            treat_error('Input argument is not a Envelope object and not a signal name');
+        end
+    
+ case 2
+     if (isa(varargin{1},'char') && isint(varargin{2}) && (any(varargin{2}==[1 2 3 4])))
+          env.num_of_comps=0;
+          env.comp_list={};
+           env.comp_list_str={};
+          name=varargin{1};
+         channel=varargin{2};
+         sig=Signal(name,channel);
+         env=class(env,'Envelope',sig);
+     else
+	    treat_error('Wrong input arguments for Envelope constructor');
+	end
+     
+otherwise
+  treat_error('Wrong input argument to Envelope constructor');
+end     
+
+

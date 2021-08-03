@@ -1,0 +1,2 @@
+function m_sig=add_comp_list(m_sig,'Freq_comp')
+m_sig.comp_list={'Reps_comp' 'Level__comp' 'STime_comp' 'ETime_comp' 'Ramp_comp'};% an array of the components represented by strings

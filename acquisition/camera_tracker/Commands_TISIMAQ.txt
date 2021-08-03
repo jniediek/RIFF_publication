@@ -1,0 +1,56 @@
+=======	INIT ================
+
+cams = imaqhwinfo('tisimaq_r2013');
+frmt = cams.DeviceInfo(2).SupportedFormats;
+cam = videoinput('tisimaq_r2013',1,frmt{4});
+src = getselectedsource(cam);
+
+cam = videoinput('tisimaq_r2013',2,'Y800 (1280x960)');
+delete(cam)
+======= configure ================
+
+triggerconfig(cam, 'manual');
+cam.FramesPerTrigger = 1; % inf
+cam.StopFcn = {'util_showframe', frameNumber};
+src.Trigger = 'Disable';
+src.Strobe = 'Disable';
+src.Exposure = 0.033;
+src.ExposureAuto = 'Off';
+src.GainAuto = 'on';
+src.FrameRate = '15.00';
+cam.triggerrepeat = 0;	% Only one trigger when activated
+
+
+======= acquire frame ================
+
+
+start(cam);
+trigger(cam);
+
+peekdata(cam,1)		%num of frames
+[frames, t, meta] = getdata(cam, n, type, format)
+	format: {'native', 'uint8', 'single', 'double' ...}
+	type: {'numeric', 'cell'}
+	
+
+stop(cam);
+snapshot = getsnapshot(cam);		% very long!
+flushdata(cam)
+
+======= INFO ================
+
+cam.Running
+cam.Previewing
+cam.FramesAvailable;
+imaqmem
+
+======= sizes ================
+
+One .tif frame - 800Y, not binned:		1mb
+At 20 fps its 20mb/s, 1.2 Gb/min
+
+If saving [1200,900] images - 108 x [100,100] frames in a single frame.
+Single big frame = 108 small ones = 108f/30sec=3.1 sec
+single tiff file = 500 Big images = 3.1sec*500frames/tiff = 1550 secs/tiff = 25 mins
+24
+

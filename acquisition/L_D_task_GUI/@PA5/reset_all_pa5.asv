@@ -1,0 +1,14 @@
+function [succeeded,err]=reset_all_pa5(pa5_arr,file_name)
+for k=1:4
+    err{k}='';
+end
+for k=1:4
+    write(pa5,file_name,['%**************************  PA5x - -> reset ***************************']);
+    [succeeded(k),err{k}]=reset(pa5_arr{k},file_name)
+    if ~succeeded(k)
+      write(pa5_arr{k},file_name,['%Error resetting PA5x_',num2str(k)]);
+    else
+    write(pa5_arr{k},file_name,['%PA5x_',num2str(k),'''s Reset succeeded']);
+    end
+end
+write(pa5_arr{k},file_name,['%****************************************************************************']);      

@@ -1,0 +1,24 @@
+function  create_freq_level_plot(out_manager)
+
+meta=out.meta;
+line1=get_line(meta,1);
+signal=get(line,'Chan_signals_1');
+m_sig=get(signal{1},'Main_signal');
+if ~(isa(m_sig,'FREQ')
+    msgbox('The Requestet signal is not of type FREQ!','Notice');
+end
+
+freq_comp=get(m_sig,'Freq_comp');
+level_comp=get(m_sig,'Level_comp');
+
+freq_wrap=get(freq_comp,'Wrap');
+level_wrap=get(level_comp,'Wrap');
+
+if any([freq_wrap,level_wrap])
+     msgbox('Both of the selected component must be unwrapped!','Notice');
+end
+
+freq_num_data=get(freq_comp,'Fixed_num_data');
+level_num_data=get(level_comp,'Fixed_num_data');
+
+p_handle=level_freq;

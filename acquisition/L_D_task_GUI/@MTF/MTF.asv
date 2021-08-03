@@ -1,0 +1,38 @@
+function  mtf=MTF(varargin)
+%   MTF class constructor.
+%   MTF(channel) constructs MTF siganl in the given channel.
+
+switch nargin
+case 0
+% if no input arguments, create a default object
+channel=1;
+env=Envelope('MTF',channel);
+env=add_to_comp_list(env,'Freq_comp',Freq_comp(20));
+env=add_to_comp_list(env,'Phase_comp',Phase_comp);
+env=add_to_comp_list(env,'Depth_comp',Depth_comp);
+mtf.num_of_comps=length(get(env,'Comp_list'));
+mtf=class(mtf,'MTF',env);
+
+case 1
+       if (isa(varargin{1},'MTF'))
+       mtf = varargin{1}; 
+       
+    elseif (isint(varargin{1}) && (any(varargin{1}==[1 2 3 4])))
+           channel=varargin{1};
+			env=Envelope('MTF',channel);
+            env=add_to_comp_list(env,'Freq_comp',Freq_comp(20));
+            env=add_to_comp_list(env,'Phase_comp',Phase_comp);
+            env=add_to_comp_list(env,'Depth_comp',Depth_comp);
+            mtf.num_of_comps=length(get(env,'Comp_list'));
+			mtf=class(mtf,'MTF',env);
+        else
+            error('Input argument is not a MTF object and not a channel number');
+    end
+    
+otherwise
+  error('Wrong input argument to MTF constructor');
+end 
+
+
+
+

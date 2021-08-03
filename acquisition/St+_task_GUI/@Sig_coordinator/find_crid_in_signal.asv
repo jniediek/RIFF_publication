@@ -1,0 +1,16 @@
+function val=find_crid_in_signal(signal,crid)
+% FIND_CRID_IN_SIGNAL finds the first component in 
+% the signal with the given coordination-index(crid).
+% VAL=FIND_CRID_IN_SIGNAL(SIGNAL,CRID)  the first component in 
+% the given signal with the given coordination-index(crid).
+
+comp_list=get_comp_list(signal);
+for k=1:length(comp_list)
+    comp=comp_list{k};
+   comp_crid=get(comp,'Coord_index');
+   if (comp_crid==crid)
+       val=1;
+       return;
+   end
+end
+   val=0;

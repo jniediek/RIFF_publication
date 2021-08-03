@@ -1,0 +1,15 @@
+function [succeeded,err]=set_all_atten(pa5_arr,atten_arr,file_name)
+for k=1:4
+    err{k}='';
+end
+tmp_pa5=PA5x;
+write(tmp_pa5,file_name,['%**************************  PA5x - -> setAtten *************************']);
+for k=1:4
+    [succeeded(k),err{k}]=set_atten(pa5_arr{1,k},atten_arr(k),file_name)
+    if ~succeeded(k)
+      write(pa5_arr{1,k},file_name,['%Error while setting Attenuation  level of ',num2str(atten_arr(k)),' to PA5x_',num2str(k)]);
+    else
+        write(pa5_arr{1,k},file_name,['%Attenuation level of ',num2str(atten_arr(k)),' was set correctly to PA5x_',num2str(k)]);
+    end
+end
+write(tmp_pa5,file_name,['%****************************************************************************']);      

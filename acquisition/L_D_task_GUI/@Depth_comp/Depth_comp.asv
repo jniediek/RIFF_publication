@@ -1,0 +1,28 @@
+function comp = Depth_comp(varargin)
+%   Depth_comp class constructor. 
+%   c=Depth_comp(STATIC_VALUE) creates a Depth_comp object which represents a
+%   Signal component representing it's  Depth. 
+%   Depth_comp class constructor.
+%    Depth_comp constructs a depth component with the defualt depth
+
+global DEPTH_COMP_DEFAULT;
+DEPTH_COMP_DEFAULT=1;
+
+if nargin==0
+    comp.name='Depth_comp';
+s_comp=Sig_comp(DEPTH_COMP_DEFAULT);
+comp=class(comp,'Depth_comp',s_comp);
+elseif nargin==1
+    if (isa(varargin{1},'Depth_comp'))
+      comp = varargin{1}; 
+  else
+      comp.name='Depth_comp';
+      s_comp=Sig_comp(varargin{1});
+      comp=class(comp,'Depth_comp',s_comp);
+      is_legal_depth(comp,varargin{1});
+        end
+else
+    error('Wrong number of input arguments')
+end
+
+

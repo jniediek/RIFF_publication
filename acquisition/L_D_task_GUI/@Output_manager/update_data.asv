@@ -1,0 +1,5 @@
+function out=update_data(out,data,index)
+out_data=get(out,'Data');
+out_data{index}=data;
+sum_of_data=sum_of_data+
+out=set(out,'Data',out_data);

@@ -1,0 +1,30 @@
+function swp = Sweep(sdata,edata,num_data,reps,mode,step)
+%   Sweep class constructor.
+%   Sweep(SDATA,EDATA,NUM_DATA,REPS,MODE,STEP)
+%   swp creates a sweep object that generates values in
+%   the range (SDATA,EDATA). The number of values generated
+%   are NUM_DATA and each is being repited REPS time (totaly the
+%   number of values are num_data*reps). The values are taken from range
+%   according to the specified MODE (RND,SEC,CEN) and STEP (LIN,LOG,1/LIN,1/LOG)
+global SWEEP_MODE_NAMES;
+global SWEEP_STEP_NAMES;
+global SWEEP_MAX_TRIALS;
+
+SWEEP_MODE_NAMES = [' SEQ ',' RND ',' CEN '];
+SWEEP_STEP_NAMES = [' LIN ',' LOG ',' 1/LIN ',' 1/LOG '];
+SWEEP_MAX_TRIALS = 1000;
+
+if nargin==6
+    swp.sdata=sdata;
+    swp.edata=edata;
+    swp.num_data=num_data;
+    swp.reps=reps;
+    swp.mode=mode;
+    swp.step=step;
+    swp.seq_length=swp.num_data*swp.reps;
+    check_params(swp,'SDATA','EDATA','Num_data);
+    swp=class(swp,'Sweep');
+    
+else
+    error('Wrong number of input arguments')
+end

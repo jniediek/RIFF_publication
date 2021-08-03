@@ -1,0 +1,68 @@
+function line=set(line,varargin)
+% SET Set Line properties and return the updated object
+% Property names are:
+%  
+
+property_argin = varargin;
+while length(property_argin) >= 2,
+    prop = property_argin{1};
+    val = property_argin{2};
+    property_argin = property_argin(3:end);
+    switch prop
+%  case 'Ear'
+%      %%%%%%%%%%%%%%%%%%%%%%%
+%      %  global SUM7_NUM_EAR_MODES;
+%       %  high=find(ear>SUM7_NUM_EAR_MODE);
+%             %%%%%%%%%%%%%%%%%%%%%%%
+%             low=find(0<ear);
+%             high=find(ear>8);%%%%%%%%%%%%%%%%%%%del
+%             if ~isempty(high) | ~isempty(low)
+%          treat_error('Invalid ear selection');
+%         else
+%             line.ear = val;
+%         end
+case 'Period'
+    %%%%%%%%%%%%%%%%%%%%%%%
+   %   global RP2_MIN_SRATE RP2_MAX_SRATE;
+    %   if val<RP2_MIN_SRATE | val>RP2_MAX_SRATE
+        %%%%%%%%%%%%%%%%%%%%%%%%
+%         if val<1 | val>100 %%%%%%%%% del %%%%%%%%
+%            treat_error('Invalid period');
+%         else
+          line.period =val;
+%           end
+  case 'Chan_signals'
+      line.chan_signals=val;
+      line.num_of_chans=0;
+      for k=1:4
+        if ~(isempty(line.chan_signals{k}))
+         line.num_of_chans=line.num_of_chans+1;
+        end
+    end
+    reps=get(line,'Line_num_of_trials');
+    if reps==0
+        global TRIAL_DUR_COMP_DEFAULT;
+        reps=TRIAL_DUR_COMP_DEFAULT;
+    end
+    line.Trial_dur_comp=set(line.Trial_dur_comp,'Static_reps' ,reps);
+    case 'Trial_dur_comp'
+      line.Trial_dur_comp=val; 
+      reps=get(line,'Line_num_of_trials');
+    if reps==0
+        global TRIAL_DUR_COMP_DEFAULT;
+        reps=TRIAL_DUR_COMP_DEFAULT;
+    end
+    line.Trial_dur_comp=set(line.Trial_dur_comp,'Static_reps' ,reps);
+  case 'Right_ear'
+      line.right_ear=val;   
+      case 'Left_ear'
+      line.left_ear=val; 
+      case 'Valid'
+          line.valid=val;
+      case ' Err'
+          line.err=val;
+otherwise
+    treat_error('Line properties are: Period, Left_ear_index, Right_ear_index, Valid, Err, Chan_signals, Chan_signals_1/2/3/4');
+end     
+end
+

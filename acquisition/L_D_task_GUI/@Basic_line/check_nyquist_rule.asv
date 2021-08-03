@@ -1,0 +1,21 @@
+% Checking Nyquist rule that the largest frequency that is part of 
+% the line is not above  45% of the sampling rate.
+function check_result=check_nyquist_rule(right_ear,left_ear,samp_rate,signals)
+max_found=0;
+for k=1:4%going over 4 channels of the line
+     signal=signals{k};
+     synth_chan=get_synth_chans((right_ear,left_ear);
+    if ((~isempty(signal)) && (synth_chan(k)==1))
+            comp_list=get_comp_list(signal)%the component list of the signal in channel k
+            for q=1:length(comp_list)%going through the component list
+                comp=comp_list{q}
+                if isa(comp,'Freq_comp')
+                    max_freq=get_max_potential_freq(comp);
+                    if max_found<max_freq
+                        max_found=max_freq;
+                    end
+                end%if isa(comp,'Freq_comp')
+            end%for q=1:length(comp_list)
+    end%if ~isempty(signal)
+end%for k=1:4
+                

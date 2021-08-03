@@ -1,0 +1,43 @@
+function s_comp= update_input_method(s_comp,input_method,varargin)
+% update_input_method changes the input method of this signal component.
+% There are 3 input methods possible: 'STATIC_VALUE', 'SWEEP', 'SEQ_VALUES'.
+% if input_method is none of the above an error occurs.
+% update_input_method(s_comp,'STATIC_VALUE',value) sets the static value tp
+% be the given value.
+% update_input_method(s_comp,'SWEEP',sdata,edata,num_data,reps,mode,step)
+% sets the sweep data member according to the given parameters.
+% update_input_method(s_comp,'SEQ_VALUES',values) sets the sequenced values
+% to the given array of values.
+
+        global NULL_SWEEP;    
+        global NULL_STATIC_VALUE;
+     param_argin = varargin;     
+     
+    switch input_method
+       case 'STATIC_VALUE'
+            if nargin==3 & length(varargin)==1 & length(varargin{:})==1
+                global DEFAULT_TOTAL_TRIALS;
+                s_comp=set(s_comp,'Input_method','STATIC_VALUE','Swp_on',0,'Seq_on',0,'Static_value',varargin{1},...
+                'Fixed_num_data',get(s_comp,'Static_reps'));
+         else
+             treat_error('Wrong number of arguments for update_input_method');
+         end
+            case 'SWEEP'
+                 if nargin==8 & length(varargin)==6
+                 swp=Sweep(varargin{1},varargin{2},varargin{3},varargin{4},varargin{5},varargin{6});
+                 n=get(swp,'Seq_length');
+            s_comp=set(s_comp,'Input_method','SWEEP','Swp_on',1,'Seq_on',0,'Sweep',swp,'Fixed_num_data',n);
+            else
+             treat_error('Wrong number of arguments for update_input_method');
+         end
+            case 'SEQ_VALUES'
+                if nargin==3 & length(varargin{:})>=1 
+                    n=length(varargin{:});
+            s_comp=set(s_comp,'Input_method','SEQ_VALUES','Swp_on',0,'Seq_on',1,'Seq_values',varargin{:},'Fixed_num_data',n);
+            else
+             treat_error('Wrong number of arguments for update_input_method');
+         end
+        otherwise
+         treat_error('Input method must be one of the following:  STATIC_VALUE, SWEEP, SEQ_VALUES');   
+    end
+   

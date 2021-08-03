@@ -1,0 +1,11 @@
+function  meta=add_line(meta,line)
+% ADD_LINE
+% META=ADD_LINE(META,LINE) adds the given line to the
+% line_list of this metablock.
+% ADD_ENVELOPE adds the given envelope to the given Main-Signal list of
+% envelopes.
+% M_SIG=ADD_ENVELOPE(M_SIG,ENV) adds the given envelope (ENV) to the end of
+% the list of envelopes of this main signal.
+list=get(meta,'Line_list');
+loc=length(list);
+meta=add_line_index(meta,line,loc+1);

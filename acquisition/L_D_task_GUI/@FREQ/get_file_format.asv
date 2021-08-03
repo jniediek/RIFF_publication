@@ -1,0 +1,24 @@
+function file_format_data=get_file_format(signal,signal_table,line_num,chan_num,trial_num)
+str={};
+
+st_num1=num2str(line_num);
+st_num2=num2str(chan_num);
+st_num3=num2str(trial_num);
+sig_name=get(signal,'Name');
+
+str{1}=['% Values of Signal : ',sig_name,' in line : ',st_num1,' in channel : ',st_num2];
+str{2}=['TRIAL_DUR_VAL(',st_num1,',',st_num2,',',st_num3,')=',num2str(signal_table(end)),';'];
+main_vals=get_file_format(signal.Main_signal,signal_table(1:4),line_num,chan_num,trial_num);
+for k=1:length(main_vals)
+    str{k+2}=main_vals{k};
+end
+
+s=size(str);
+str{s(2)+1}=['%holds values of FREQ''s frequency in line : ',st_num1,' in channel : ',st_num2,'for a each trial in line'];
+str{s(2)+2}=['FREQ_FREQUENCY_VAL_',st_num1,'_',st_num2,'(',st_num3,')=',num2str(signal_table(5)),';'];
+
+env_vals=get_env_file_format(signal.Main_signal,signal_table(6:end),line_num,chan_num,trial_num);
+
+file_format_data=str;
+ 
+

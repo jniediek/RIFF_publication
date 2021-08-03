@@ -1,0 +1,13 @@
+1. change timer_h1 delayTime
+
+
+vars.elivation_tick = 0;
+vars.circ_tick = 0;
+vars.line_tick = 0;
+vars.goesUp = 1;
+vars.doTurn = 1;
+vars.performTurnEnd = false;
+vars.performTurnStart = false;
+vars.suspend_z_seq = false;
+vars.doPlaySound = false;
+

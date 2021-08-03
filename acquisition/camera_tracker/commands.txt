@@ -1,0 +1,170 @@
+=====	showing tools	=========
+
+
+frame = imread('combo4_gfp_6.tif',1)
+A = imread(fname, k, 'Info', info);                         // speed enhancer
+h = imshow(rect_pic*7,'InitialMagnification','fit')
+imshow(rect_pic*15,'border', 'tight')
+imtool(rect_pic)
+set(h,'CData',frame*thrshld);                               // use handle to update the data
+plot([x1,x2],[y1,y2],'Color','r','LineWidth',2);            // plot a line
+plot(x,y,'ro','MarkerSize',20, 'LineWidth',2);              // plot a circle. Marker size is the center.
+scatter3(x,y,z,'black','filled')                            // create 3D scattered plot, constant color
+scatter3(x,y,z,[], color_vec,'black','filled')              // create 3D scattered plot, variable color
+set(handles.update_textBox, 'String','FUCK MY LIFE!!!!')    // edit every parameter!!!
+title(graph_title,'FontSize', 16,'fontweight','bold');      // bold big title
+tightfig;                                                   // reduces spaces around figures!
+figure('name',inputFile(1:end-4))
+axis([x_min x_max y_min y_max]);
+
+x = 0:.05:2*pi;                 // creating colored 2D plots.
+y = sin(x);
+z = zeros(size(x));
+col = x;  % This is the color, vary with x in this case.
+surface([x;x],[y;y],[z;z],[col;col],...
+        'facecol','no',...
+        'edgecol','interp',...
+        'linew',2);
+caxis([-50 200]);           // limit the color map
+
+
+====    TIFF - lib  =========
+t.write(frame);
+writeDirectory(t);                              // create new image
+
+t.setTag('ImageLength',512.00);                 // must tags
+t.setTag('ImageWidth',512.00);
+t.setTag('Photometric',Tiff.Photometric.MinIsBlack);
+t.setTag('PlanarConfiguration', Tiff.PlanarConfiguration.Chunky)
+t.setTag('BitsPerSample',16);
+t.write(frame_arr{i});
+t.close();
+
+// Can add tags as struct
+tagStruct.Artist = 'AWB::GFP';     //   Worm strain
+tagStruct.DateTime = 123;          //   Date - msec from first
+tagStruct.XPosition = 55000;       //   X - stage units
+tagStruct.YPosition = 55000;       //   Y - stage units
+tagStruct.ResolutionUnit = 30;     //   EM
+tagStruct.DocumentName = 200;      //   Exp
+tagStruct.ImageDepth = 123;        //   Z
+tagStruct.Software = 'mine'  ;     //   software - {'mine' , 'sense'}
+
+setTag(t,tagStruct)
+
+
+====	create BW mask	==========
+
+
+T = graythresh(rect_pic)                            // mean(frame) or median (frame)
+imb = im2bw(rect_pic,T)
+[L, num] = bwlabel(a);
+D = regionprops(L, 'area', 'perimeter','Centroid', 'Orientation', 'PixelList');
+% dilate = expand   ;   erosion = wear-out  ;   
+se = ones(3,3);
+smaller_mask = 1-imdilate(1-mask,se);               //mask is BW, se is filter that removes outer 2 pixels.
+[B,L,N] = bwboundaries(mask);                       // get boundaries of all objects in 'mask'
+imagesc(bwmorph(round_mask,'skel',Inf))
+
+[i,j]=ind2sub([512 512],125000);                    // i is row, j is column
+linearInd = sub2ind(matrixSize, rowSub, colSub)     // opposite
+
+
+
+
+===	array manipulation	======
+
+
+ bsxfun(FUNC,A,B);                  // do bianry operations between two array by FUNC
+ a = struct('arr',{cell_arr})       // create a single struct will 'a.arr = cell_arr'
+ pdist2([1 1],[1 3])                // distance between two points
+ [flag,idx]=ismember(point,array,'rows');  // find object in an array
+
+=== coding heaven   ======
+
+
+sqr = @(x) x.^2;        //  LAMBDA functions
+num2str(int, 2);        //  precision of showing an int - 2 digits!
+if(nargin < 3);			// If number of arguments less than 3
+figure('WindowButtonDownFcn',@wbdcb)
+dbup;           // shift workspace stack
+
+
+=== user interaction + dir ===
+
+
+[x, y, button] = ginput(4)                                      //	get key press. parameter is number of presses at a time
+h = msgbox('message')                                           // create floating message
+answer = inputdlg('prompt','dlg_title',num_lines,{'defAns'})    // open input box with default message
+[file_name,~] = uigetfile('*.tif','Select Movie(or few...)','MultiSelect','on');    // picking files from FS
+    
+file_path = which('Food_1_1.tif');              // get full path
+[file_path,name,ext] = fileparts(file_path);    // get only the path
+cd(file);
+guidata(hObject, handles);				// Update the handles variable of the GUI (do after changes done in scope)
+
+=== Multi-Threading ====
+
+
+timer = timer('ExecutionMode','fixedRate',...
+                        'Period', 0.02,...
+                        'TimerFcn', {@GUIUpdate,handles});
+start(timer)
+stop(timer);                        // stop execution of the timer, can be started again.
+delete(timer);
+delete(timerfindall);               //  delete all timers in the system
+timerfind                           // finds all timers
+
+
+
+
+
+=== Hardware control ===
+
+
+tmtool	-	check possible connections
+
+
+
+
+=========	Matlab	============
+ 
+
+Toolboxes: CV , IP
+# imread() - read image
+# imwrite() - write image
+# im2frame() - convert image to movie frame
+# movie2avi() - write avi file
+# aviread() - read avi file
+# mmreader()/VideoReader() - read video (better)
+# VideoWriter() - create video file (2011b+)
+# movie() - show movie
+# implay() - show video interactively
+# imcrop() - Useful for interactive cropping.
+# imrotate() - Rotate image.
+# imfilter() - Use kernal to convolve/correlation.
+# nlfilter() - Sliding neighborhood operation.
+# blockproc() - Perform function on distinct blocks.
+# fspecial() - Create common image filter kernels.
+# imresize() - scale up/down image using defined interpolation.
+# padarray() - Pad image.
+# colfilt() - Column-stack filtering (faster)
+# imfreehand() - Select region with mouse
+# Many more - see IP, CV toolbox help
+imshow(imread('movie.tif',2))
+
+
+
+
+==========	Usefull terms	=============
+
+Mahalanobis distance - unitless and scale-invariant system, takes into account the correlations of the data set.
+
+
+
+==========	Data minimg	=============
+surf(m)         // show the matrix in 3D
+imagesc(m)      // show ine matrix in 2D
+
+ind = randperm(length(A));
+B = A(ind);                 // premute vec 'A' into 'B'

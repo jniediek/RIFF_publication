@@ -1,0 +1,25 @@
+function val = get(env,prop_name)
+% GET Get Envelope property from the specified object
+% and return the value. Property names are:
+% Name, Channel. 
+
+if isa(prop_name,'char')
+    index=strmatch(prop_name,env.comp_list_str,'exact');
+    if ~isempty(index)
+         val = m_sig.comp_list{index};
+   else
+    switch prop_name
+    case 'Signal'
+        val = env.signal;
+    case 'Num_of_comps'    
+        val=length(env.comp_list);
+    case 'Comp_list'
+        val=env.comp_list;
+    case 'Comp_list_str'
+        val=env.comp_list_str;    
+    otherwise
+        val=get(env.signal,prop_name);
+    end
+else
+    treat_error('The property input must be of type char');
+end

@@ -1,0 +1,134 @@
+=== handles ===
+
+	filming++
+	last_session++
+	data_creation++
+	plot 			= imshow(frame_binned, 'Parent', handles.picture_area)
+
+
+==== handles.last_session_h =====
+
+handles.last_session_h = load('session_db.mat');
+	// Dimention: All data is in binned indeces
+	// Image rotation: The image is rotated
+
+	bg_frame		// Binned + rotated image
+	c_point
+	num_of_rats
+	ports
+	r
+	slices   
+	
+	
+===	handles.filming ====
+
+	is_live			= false
+	is_recording	= false
+	h_maestro		= 0
+	is_linked		= false
+	binning 		= 2
+	min_size_thr 	= 50
+	max_size_thr 	= 1500
+	cam 			= cam
+	src 			= src
+	mult 			= 1
+	show_max 		= false
+	clear_bin 		= [1, 1]
+	is_clipping 	= false
+	cam_res			= size(frame_binned).*2
+	helper 			= 'start'
+	slice_colors 	= ['g', 'r', 'y', 'cyan']
+	h_geo 			= zeros(1, 4)
+	
+=== handles.data_creation ===
+
+	led_loc 		= [-1 -1]
+	dir_name 		= 'C:\logging_data\[dir_name]\'
+	session_serial 	= session_serial;
+    file_name 		= ['RIFF_s' num2str(session_serial)];
+    file_name_stat 	= 'RIFF';
+    txt_handle 		= 0;
+	
+	
+============================= Function Perks ========================================
+	
+F> RatTracker_OpeningFcn()
+	(*) No image is taken at the Tracker initialization
+	(*) Previous session data is loaded from a single file "\Alex_code\session_db.mat".
+		It is the only non .m/.mat type dependency.
+	(*) Walls are drawn as a functio of num_of_rats in previous session
+	(*) The image that is shown at start up is taken from last_session_h.bg_frame
+	(*) No directories, .tif or .txt are created. Only after 'Start rec' button is pressed
+	(*) init_db() is NOT called.
+	
+F> init_db()
+	(*) Singleton function call.
+	(*) New Directory is created. If already exists, nothing happens
+	(*) Session index is updated to prevent overwriting previous sessions.
+		
+F> snap_button_Callback()
+	(*) The save image is rotated.
+	(*) The frame is unbinned (full-res)
+	(*) Saves the image under unique name - can't overwrite data.
+	
+F> bg_button_Callback()
+	(*) Takes image with activated LED, saves in 'bg' variable
+	(*) Image is binned and rotated
+	(*) Image .tif file is NOT created
+	(*) 'bg_frame' is updated in 'session_db' variable
+	
+F> rat_mark_button_Callback()	
+	(*) Updates 'bg' variable to image with removed rats
+	(*) No new file or variable is created
+	
+F> led_button_Callback()
+	(*) Gets [x,y] from mouse click, and finds center of the point.
+	(*) Updates 'data_creation.led_loc' to location of the LED
+	(*) Coordinated of LED are NOT binned, full-res.
+	
+F> update_geo_button_Callback()
+	(*) Calls update_RIFF_geometry()
+	
+F> update_RIFF_walls()
+	(*) Uses data variables from 'last_session_h'
+	(*) Get slice locations in binned coordinates.
+	(*) Doesn't save data, only returns the slices
+	
+F> startRec_Callback()
+	(*) Saves the 'bg' into 'bg.tif'
+	(*) 
+	(*) 
+	(*) 
+	
+F> led_button_Callback()
+	(*) Finds location of LED
+	(*) Binned coordinates.
+	(*) Saves location in 'handles.data_creation.led_loc'
+	
+============================= RatDataHander Class ===================================
+
+Fields:
+	led_loc
+	led_size
+	loc
+	movie_serial
+	frame_ind
+	tiff_ind
+	full_tiff_name
+	tiff_handle
+	rat_loc_h
+	marker_color
+	collage_size
+	collage_ind
+	collage_total
+	collage
+	clean_collage
+	rat_rect
+	rat_ROI_width
+	rat_ind
+	tagstruct
+	max_tiff_len
+	file_name
+	dir_name
+	
+>F RatDataHandler(rat_ROI_width, collage_size, file_name, rat_ind, dir_name, pic_h, marker_c)

@@ -1,0 +1,27 @@
+function m_sig = Main_signal(name,channel)
+%   Main_signal class constructor.
+%   Main_signal(name,channel) constructs main signal with a given name and
+%   given channel.
+%   Main_signal is the base class of all signals that are not envelopes
+%   and which envelopes are being built on top of them.
+%   Every main signal has a level component, start time,end time and ramp
+%   length components of the ramp. The state of each of the above can be
+%   one of the following:
+%   1. static - not swept and not using sequenced values. Represented by 0.
+%   2. swept values - Represented by 1.
+%   3. using sequenced values  - Represented by 2.
+
+signal=Signal(name,channel);
+
+m_sig.Level_comp=Level_comp;
+m_sig.STime_comp=STime_comp;
+m_sig.ETime_comp=ETime_comp;
+m_sig.Ramp_comp=Ramp_comp;
+m_sig.envelope_list=[];
+
+m_sig.level_state=0;
+m_sig.stime_state=0;
+m_sig.etime_state=0;
+m_sig.ramp_state=0;
+
+m_sig=class(m_sig,'Main_signal',Signal);

@@ -1,0 +1,4 @@
+NIC:
+	cam(445) - [IP: 192.168.1.1] - [Mac: F2-33]
+Latency:
+	start(cam)	-	0.25 sec

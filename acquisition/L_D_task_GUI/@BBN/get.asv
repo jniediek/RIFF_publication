@@ -1,0 +1,19 @@
+function val= get(bbn,prop)
+% GET Get BBN signal property from the specified object
+% and return the value. Property names are:
+% Name, Channel, Signal, Level_comp, STime_comp, ETime_comp, Ramp_comp, Envelope_list,
+% Num_of_env, Comp_list, Comp_list_str.
+
+if isa(prop_name,'char')
+	global BBN_NUM_COMPS;
+	BBN_NUM_COMPS=4;
+	switch prop
+	case 'Num_of_comps'
+	val=BBN_NUM_COMPS;
+	otherwise
+	val=get(bbn.main_signal,prop);
+	end
+else
+    treat_error('The property input must be of type char');
+end
+

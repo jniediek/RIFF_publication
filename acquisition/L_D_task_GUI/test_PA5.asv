@@ -1,0 +1,32 @@
+interface='GB';
+for dev_num=1:6
+    PA5_list(dev_num)=actxcontrol('PA5.x',[5 5 26 26]);
+    invoke(PA5_list(dev_num),'ConnectPA5',interface,dev_num);
+end
+ii=1;
+while 1>0
+atten_arr=ii*ones(1,6);
+ii=mod(ii+1,100);
+for k=1:6
+    actx_c
+ if (invoke(actx_cntrl,'SetAtten',atten)==0)
+    err_msg = invoke(actx_cntrl,'GetError');
+   if length(err_msg) > 0
+        err=err_msg;
+   end
+   invoke(actx_cntrl,'Display',err,0);
+    succeeded=0;
+    str=['%Error while setting Attenuation  level of ',num2str(atten),' to PA5_',num2str(dev_num)];
+    result_pa5=pa5;
+else 
+    invoke(actx_cntrl,'Display',['Atten=',num2str(atten)],0);
+    succeeded=1;
+    str=['%Attenuation level of ',num2str(atten),' was set correctly to PA5_',num2str(dev_num)];
+    result_pa5=set(pa5,'Atten',atten);
+end
+           [pa5_arr{k},succeeded(k),err{k}]=set_atten(PA5_list(k),atten_arr(k));
+end
+            if ~prod(succeeded)
+                break;
+            end
+end

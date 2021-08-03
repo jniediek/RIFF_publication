@@ -1,0 +1,39 @@
+=======	INIT ================
+cam = imaq.VideoDevice('winvideo', 2, 'Y800_1280x960');
+
+src = cam.Source;
+release(cam)
+
+preview(vid);
+stoppreview(vid);
+imaqreset
+delete(vid)
+
+vid = videoinput('winvideo', 2, 'Y800_1280x960');
+src = getselectedsource(vid);
+======= configure ================
+
+cams = imaqhwinfo('winvideo');
+frmt = cams.DeviceInfo(2).SupportedFormats;
+
+cam.ROIPosition = [60 0 960 960];
+src.ExposureMode = 'manual'
+src.ExposureMode = 'auto';
+src.Exposure = -3;
+src.FrameRate = '15.0000';
+
+======= acquire frame ================
+
+frame = step(vidobj)
+
+
+======= INFO ================
+
+
+
+
+======= sizes ================
+
+One .tif frame - 800Y, not binned:		1mb
+At 20 fps its 20mb/s, 1.2 Gb/min
+

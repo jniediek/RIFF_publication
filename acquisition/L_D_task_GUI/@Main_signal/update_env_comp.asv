@@ -1,0 +1,53 @@
+function m_sig= update_env_comp(m_sig,env_index,comp_name,input_method,varargin)
+% update_env_comp(sig,env_index,comp_name,input_method,varargin) updates the given component
+% (comp_name) with the given input_method ('STATIC_VALUE', 'SWEEP',or
+% 'SEQ_VALUES') and with the given parameters.
+% update_comp(sig,comp,'STATIC_VALUE',value) sets the static value of comp to
+% be the given value.
+% update_comp(sig,comp,'SWEEP',sdata,edata,num_data,reps,mode,step)
+% sets the sweep data member of comp according to the given parameters.
+% update_comp(sig,comp,'SEQ_VALUES',values) sets the sequenced values of
+% comp to the given array of values.
+% comp_name should be one of the following: 
+%Reps_comp, Level__comp, STime_comp, ETime_comp, Ramp_comp.
+
+%res=findstr(comp_name,m_sig.coord_comp);
+% res={' '};
+% if isempty(res)
+%     error('Wrong comp_name');
+% end
+env=get_envelope(m_sig,env_index);
+comp=get(env,comp_name);
+if nargin==3 %only changing input_method property
+           comp=set(comp,'Input_method',input_method);
+           env=set(env,comp_name,comp);
+           m_sig=remove_envelope_index(m_sig,env_index);
+           m_sig=add_envelope_index(m_sig,env);
+           return;
+       end
+ switch input_method
+       case 'STATIC_VALUE'
+           if nargin==4 & length(varargin)==1 & length(varargin{:})==1
+           comp=update_input_method(comp,input_method,varargin{:});
+       else
+             error('Wrong number of arguments');
+         end
+            case 'SWEEP'
+                 if nargin==9 & length(varargin)==6
+                     comp=update_input_method(comp,input_method,varargin{:});
+            else
+             error('Wrong number of arguments');
+         end
+            case 'SEQ_VALUES'
+                if nargin==4 & length(varargin{:})>=1 
+                    comp=update_input_method(comp,input_method,varargin{:});
+            else
+             error('Wrong number of arguments');
+         end
+        otherwise
+         error('Input method must be one of the following:  STATIC_VALUE, SWEEP, SEQ_VALUES');   
+    end
+            env=set(env,comp_name,comp);
+           m_sig=remove_envelope_index(m_sig,env_index);
+           m_sig=add_envelope_index(m_sig,env_index,env);
+   

@@ -1,0 +1,18 @@
+function max_trials=max_trials_per_group(coord)
+num_groups=coord.num_coord_groups;
+
+	if nargin==1
+        for k=1:coord.num_groups
+            len=length(coord.coord_groups{k});
+            for l=1:len
+            comp=coord.coord_groups{k}{l};
+            num=get(comp,'Fixed_num_data');
+            if num>trials(k)
+        trials(k)=num;
+    end
+end
+end
+	else
+	    treat_error('Wrong number of input arguments for max_trials_per_group');
+	end
+       

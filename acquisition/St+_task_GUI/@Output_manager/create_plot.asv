@@ -1,0 +1,70 @@
+function  create_plot(out_manager,data)
+% trial_dur=get(out_manager,'Cur_trial_dur');%^print
+npts=get(out_manager,'Cur_trial_npts');
+buf_samp_rate=get(out_manager,'Buffer_samp_rate');
+time_collected=(npts/buf_samp_rate)*1000;   %in miliseconds
+
+if ~(data.user_time_range)
+    x_end=time_collected;
+    x_start=1;
+else
+    x_end=data.x_end;
+    x_start=data.x_start;
+end
+
+% if data.x_start>time_collected%check
+%     return;
+% end
+% 
+tick_end=x_end;
+tick_time_dur=x_end-x_start+1;
+if x_end>time_collected%check
+    x_end=time_collected;
+end
+
+time_dur=x_end-x_start+1;
+ start_npts=ceil((x_start/time_collected)*npts);
+end_npts=ceil((x_end/time_collected)*npts);
+relative_npts=end_npts-start_npts+1;
+time_range=(1:relative_npts)*time_dur/relative_npts;
+data=get(out_manager,'Cur_trial_data');
+
+% size_time=size(time_range);
+% tmp_data=data(start_npts:end_npts);
+% size_data=size(tmp_data);%^print
+if ~(x_start>time_collected)
+    tmp_data=data(start_npts:end_npts);
+%     if (end_npts>length(data))
+%         tmp_end=time_collected;
+%         tmp_time_dur=tmp_end-x_start+1;
+%         tmp_end_npts=ceil((tmp_end/time_collected)*npts);
+%         tmp_relative_npts=tmp_end_npts-start_npts+1;
+%         time_range=(1:tmp_relative_npts)*tmp_time_dur/tmp_relative_npts;
+%         tmp_data=data(start_npts:tmp_end_npts);
+%     end
+    plot(data.axes1,time_range,tmp_data);
+end
+
+if x_start==1
+    start=0;
+else
+    start=x_start;
+end
+marks1=[start,round(tick_time_dur/4+start),round(tick_time_dur/2+start),...
+    round(tick_time_dur*3/4+start),round(tick_time_dur+start-1)];
+marks_str1=marks1';
+
+set(data.axes1,'XLim',[start,tick_end+2]);
+set(data.axes1,'XTick',marks1);
+set(data.axes1,'XTickLabel',marks_str1);
+
+volt_range=data.y_end-data.y_start;%^print
+rate=volt_range/10;
+marks2=(data.y_start:rate:data.y_end);%^print
+tmp_marks2=(data.y_end:-rate:data.y_start);
+marks_str2=[-10;-8;-6;-4;-2;0;2;4;6;8;10];
+set(data.axes1,'YLim',[data.y_start,data.y_end]);
+set(data.axes1,'YTick',marks2);
+set(data.axes1,'YTickLabel',marks_str2);
+
+

@@ -1,0 +1,42 @@
+function s_comp = Sig_comp(varargin)
+%   Sig_comp class constructor. Sig_comp is the base class of all signal components that exists
+%   (Level_comp, Freq_comp ...etc).
+%   Sig_comp(argument) constructs a Sig_comp with the given value as static
+%   value.
+%   Sig_comp(seq_flag,argument) constructs a Sig_comp. If using sequenced
+%   values then seq_flag==1 and argument is an array of values, otherwise
+%   argument is a single value that is set to be the static value of this
+%   component.
+%   Sig_flag(sdata,edata,num_data,reps,mode,step) constructs a Sig_comp
+%   with swept NUM_DATA values in the range(SDATA,EDATA), each being
+%   repeated REPS times. The value are taken according to the mode and step
+%   specified. 
+
+	if nargin==1
+        if length(varargin{1}==1) %static value (input or default)
+		s_comp.swp_on=0;
+		s_comp.seq_on=0;
+		s_comp.static_value=varargin{1};
+		s_comp.seq_values=[];
+        s_comp.sweep=Sweep(0,0,0,0,'SEQ','LIN');
+	    s_comp=class(s_comp,'Sig_comp');  
+        
+    else if length(varargin{1}>1) %sequenced values    
+        s_comp.swp_on=0;
+	    s_comp.seq_on=0;
+        s_comp.static_value=[];
+        s_comp.seq_values=varargin{1};
+	
+    s_comp=class(s_comp,'Sig_comp');      
+    
+    
+	elseif nargin==6
+        s_comp.sweep=Sweep(varargin{1},varargin{2},varargin{3},varargin{4},varargin{5},varargin{6});
+	    s_comp.swp_on=1;
+	    s_comp.seq_on=0;  
+	    s_comp.seq_values=[];
+	    s_comp.static_value=[];
+	    s_comp=class(s_comp,'Sig_comp');      
+	else
+	    error('Wrong number of input arguments')
+	end

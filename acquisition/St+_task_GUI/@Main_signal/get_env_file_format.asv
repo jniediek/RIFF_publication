@@ -1,0 +1,27 @@
+function file_format_data=get_env_file_format(signal,signal_table,line_num,chan_num,trial_num)
+str={};
+
+st_num1=num2str(line_num);
+st_num2=num2str(chan_num);
+st_num3=num2str(trial_num);
+
+num_env=get(signal,'Num_of_env');
+for k=1:num_env
+    env=get_envelope(signal,k);
+    s=size(str);
+    num_comps=get(env,'Num_of_comps');
+    table=signal_table(1:num_comps);
+    signal_table=signal_table(num_comps+1:end);
+    file_format=get_file_format(env,signal_table,line_num,chan_num,trial_num);
+    for q=1;length(file_format)
+        str{s(2)+q}=file_format{q};
+        
+    end
+str{1}=['LEVEL_VAL(',st_num1,',',st_num2,',',st_num3,')=',num2str(signal_table(1)),';'];
+str{2}=['STIME_VAL(',st_num1,',',st_num2,',',st_num3,')=',num2str(signal_table(2)),';'];
+str{3}=['ETIME_VAL(',st_num1,',',st_num2,',',st_num3,')=',num2str(signal_table(3)),';'];
+str{4}=['RAMP_VAL(',st_num1,',',st_num2,',',st_num3,')=',num2str(signal_table(4)),';'];
+
+ file_format_data=str;
+ 
+ 

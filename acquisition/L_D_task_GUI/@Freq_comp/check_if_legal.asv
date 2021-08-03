@@ -1,0 +1,37 @@
+function [valid_flag,err]=check_if_legal(comp,prop,val)
+valid_flag=1; err='';is_formula=0;
+numeric=str2num(val);
+  switch prop
+       case 'Static_value'
+        if (~isempty(numeric))%dealing with a constant number
+           if val<0
+             valid_flag=0; 
+             err='Frequency must be positive';
+             end
+    otherwise
+        [valid_flag,err]=check_if_legal(comp.sig_comp,prop,val);
+    end
+    
+    
+            if (~isempty(numeric))%dealing with a constant number
+                     if val<0
+                        valid_flag=0; 
+                        err='Time must be positive';
+                    end
+                else%dealing with a potential formula
+                    
+                      [is_formula,final_value,def_exist]=is_legal_formula(val,def_arr,var_arr);
+                      if (is_formula & ~def_exist)
+                              if (final_value<0) 
+                               valid_flag=0; 
+                                err='Time must be positive';
+                                 end
+                      end
+                    if ~(is_formula)
+                        valid_flag=0; 
+                        err='Not a legal formula expression'; 
+                    end
+                end
+    otherwise
+        [valid_flag,err,is_formula]=check_if_legal(comp.sig_comp,prop,val,def_arr,var_arr);
+    end

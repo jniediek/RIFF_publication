@@ -1,0 +1,34 @@
+function comp = Level_comp(varargin)
+%   Level_comp class constructor.
+%   Level_comp() constructs a level component with the defualt level
+%   Level_comp(level) constructs a level component with a given level
+%   Level_comp(slevel,elevel,num_data,reps,mode,step) constructs a swept
+%   level component.
+%   Level_comp([levels]) constructs a sequenced level component.
+
+global LEVEL_COMP_DEFAULT;
+LEVEL_COMP_DEFAULT=89.9;
+
+if nargin==0
+    comp.name='LEVEL';
+s_comp=Sig_comp(LEVEL_COMP_DEFAULT);
+comp=class(comp,'Level_comp',s_comp);
+
+elseif nargin==1
+   comp.name='LEVEL'; 
+  if length(varargin{1})==1  %scalar  
+  s_comp=Sig_comp(varargin{1});   
+  comp=class(comp,'Level_comp',s_comp);  
+elseif length(varargin{1})>1  %a sequence 
+  s_comp=Sig_comp(varargin{:});   
+  comp=class(comp,'Level_comp',s_comp);  
+end
+
+elseif nargin==6   
+    comp.name='LEVEL';
+    s_comp=Sig_comp(varargin{1},varargin{2},varargin{3},varargin{4},varargin{5},varargin{6}); 
+    comp=class(comp,'Level_comp',s_comp);  
+ 
+else
+    error('Wrong number of input arguments')
+end

@@ -1,0 +1,7 @@
+function  m_sig=add_envelope(m_sig,env)
+% m_sig=add_envelope(m_sig,env) adds the given envelope to the
+% envelope_list of this main signal.
+
+env_list=get(m_sig,'Envelope_list')
+loc=length(env_list);
+m_sig=add_envelope_index(m_sig,env,loc+1);

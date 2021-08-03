@@ -1,0 +1,15 @@
+function write(pa5,file_name,str,func_name)
+if isempty(file_name)
+    return;
+end
+fid = fopen(file_name,'a');
+
+fprintf(fid,'\n');
+frame_line=['%------------------------------  PA5x - -> ',func_name,'  ------------------------------'];
+fprintf(fid,'%s',frame_line);
+fprintf(fid,'\n');
+fprintf(fid,'%s',str);
+fprintf(fid,'\n');
+fprintf(fid,'%s',frame_line);
+fprintf(fid,'\n');
+***************************

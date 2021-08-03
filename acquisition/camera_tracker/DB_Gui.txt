@@ -1,0 +1,109 @@
+====	handles.data_creation.   =====
+	frame_ind		//	Camera triggers
+	file_name		//	Name of the file + session
+	session_serial	//	Global experiment Ind.
+	file_name_stat
+	max_tiff_len	// Maximal number of DIR in a single .tif file
+	collage_size
+	rat_ROI_width
+	tiff_handle
+	txt_handle
+	tagstruct
+	bg
+	led_loc
+    dir_name
+
+====	handles.filming.	====
+	is_live
+	is_recording
+    is_clipping
+	binning
+	cam
+	src
+	frame
+	plot
+	rat_loc
+	size_thr
+	show_max
+	mult
+    helper
+	h_maestro
+    is_linked
+
+====	data		====					// current max size is 30000 points = 15min _X_ 60sec _X_ 30fps .
+	head_array				// head_array{frame_cntr} = new_value;
+	XYZ_array				// XY_array{frame_cntr - 1} = new_value;
+					// time_array{frame_cntr - 1} = new_value;
+
+[doExit] = assert(cond_true,message)
+
+
+====    Button groups   =========
+
+control_buttons =   rat_mark_button
+                    led_button
+                    max_button 
+                    exp_up 
+                    mult_up 
+                    exp_up_up
+                    exp_down
+                    mult_down 
+                    exp_down_down
+mid_buttons = 
+                    
+                    snap_button 
+                    snap_name_text
+                    clip_button 
+                    clip_name_text
+                    X_button
+Strobe_button
+custom_button
+live_button
+startRec_button
+
+
+====	usefull calls in GUIDE:	====
+    set(handles.stop_button, 'Visible','on');
+    set(handles.start_button, 'String','hi');
+	set(handles.update_text, 'String','--- Tracking ---');
+	set(handles.start_button, 'CallBack',@(hObject,eventdata)guiTest('clbk_fcn',hObject,eventdata,guidata(hObject)));
+	set(handles.pushbutton1, 'BackGroundColor',[0.94, 0.94, 0.94]);
+
+    // Get values from the GUI
+    val = round(str2double(get(handles.EM_input, 'String')))
+	
+	
+====	Tiff - headers	====
+
+	 __Data type:__ |   __Tiff tag:__	| __Stored_as:_
+	________________|___________________|_____________
+	| TimeFromStart	|	'DateTime'		|	String
+	| X				|	'XPosition'		|	Int
+	| Y				|	'YPosition'		|	Int
+	| Z				|	'HostComputer'  |	String
+	| EM			|	'YResolution'	|	Int
+	| Exp			|	'XResolution'	|	Int
+	| WormType		|	'Artist'		|	String
+	| Software		|	'Software'		|	String
+	___________________________________________________
+	
+	
+	
+	writeDirectory(t);
+	t.setTag('ImageLength',512.00);
+    t.setTag('ImageWidth',512.00);
+    t.setTag('Photometric',Tiff.Photometric.MinIsBlack);
+    t.setTag('PlanarConfiguration', Tiff.PlanarConfiguration.Chunky)
+    t.setTag('BitsPerSample',16);
+    
+    t.setTag('XResolution',data_array{1}.Exp);
+    t.setTag('YResolution',data_array{1}.EM);
+    t.setTag('Software',data_array{1}.Software);
+    t.setTag('Artist',data_array{1}.WormType);
+	
+	tagStruct.HostComputer = num2str(data_array{i}.Z);
+	
+	tagStruct.DateTime = num2str(data_array{i}.TimeFromStart);
+	tagStruct.XPosition = data_array{i}.X;
+	tagStruct.YPosition = data_array{i}.Y;
+	setTag(t,tagStruct)

@@ -1,0 +1,12 @@
+function out=init_data_struct(out)
+out.collected_trial=0;
+out.location_in_data=0;
+s=size(out.sum_data{1});
+for k=1:16
+out.data{k}=zeros(2,s(2));
+out.sum_data{k}=zeros(1,s(2));
+end
+out.data{17}=zeros(2,16,s(2));
+out.sum_data{17}=zeros(16,s(2));
+out.trial_data=cell(out.total_trials,16);
+out.trial_data_npts=zeros(1,out.total_trials);

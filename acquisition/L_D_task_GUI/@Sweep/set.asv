@@ -1,0 +1,61 @@
+function swp = set(swp,varargin)
+% SET Set Sweep properties and return the updated object
+% Property names are:
+% Sdata, Sdata_formula, Edata, Edata_formula, Num_data, Num_data_formula, 
+% Reps, Reps_formula, Mode, Step.
+
+property_argin = varargin;
+while length(property_argin) >= 2,
+    prop = property_argin{1};
+    if ~isa(prop,'char')
+       treat_error(['The property input is not a valid Signal property'])
+    end 
+    val = property_argin{2};
+    property_argin = property_argin(3:end);
+    switch prop
+        case {'Sdata_formula','Edata_formula','Num_data_formula','Reps_formula'}
+            if (~isa(val,'char'))
+                error('The value must be of type char');
+            end
+    end
+            
+	switch prop
+		case 'Sdata'
+            result=check_params('Sdata',val,'Edata',swp.edata,...
+           'Num_data',swp.num_data,'Reps',swp.reps,'Mode',swp.mode,'Step',swp.step);
+		    swp.sdata= val;
+		case 'Sdata_formula'
+	    	swp.sdata_formula= val;
+		case 'Edata'
+            result=check_params('Sdata',swp.sdata,'Edata',val,...
+           'Num_data',swp.num_data,'Reps',swp.reps,'Mode',swp.mode,'Step',swp.step);
+		    swp.edata= val;
+		case 'Edata_formula'
+	        swp.edata_formula= val;
+		case 'Num_data'
+            result=check_params('Sdata',swp.sdata,'Edata',swp.edata,...
+           'Num_data',val,'Reps',swp.reps,'Mode',swp.mode,'Step',swp.step);
+			    swp.num_data= val;
+			    swp.seq_length=swp.num_data*swp.reps;
+		case 'Num_data_formula'
+	    	swp.num_data_formula= val;
+		case 'Reps'
+            result=check_params('Sdata',swp.sdata,'Edata',swp.edata,...
+           'Num_data',swp.num_data,'Reps',val,'Mode',swp.mode,'Step',swp.step);
+			    swp.reps= val;
+			    swp.seq_length=swp.num_data*swp.reps;
+		case 'Reps_formula'
+		    swp.reps_formula= val;
+		case 'Mode'
+            result=check_params('Sdata',swp.sdata,'Edata',swp.edata,...
+           'Num_data',swp.num_data,'Reps',swp.reps,'Mode',val,'Step',swp.step);
+		    swp.mode = val;
+		case 'Step'
+            result=check_params('Sdata',swp.sdata,'Edata',swp.edata,...
+           'Num_data',swp.num_data,'Reps',swp.reps,'Mode',swp.mode,'Step',val);
+	    	swp.step= val;  
+		otherwise
+	    	error([prop,' is not a valid Sweep property']);
+	end
+end
+ 

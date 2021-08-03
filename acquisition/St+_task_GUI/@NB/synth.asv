@@ -1,0 +1,34 @@
+function  samp_points=synth(sig,samp_rate,trial_dur,varargin)
+% SYNTH is NB synth function.
+% SAMP_POINTS=SYNTH(SIG,SAMP_RATE,TRIAL_DUR,VARARGIN) Samples the signal
+% according to the givan SAMP_RATE and TRIAL_DUR. Returns the sampled
+% points.
+% varargin holds the requested Frequency value and the requested Phase
+% value for NEW_SIGNAL signal. If varargin is empty, then Freq_comp
+% static_value and Phase_comp static_value is taken instead.
+
+switch nargin
+    case 4
+        params=varargin{:};
+        if ~(isempty(params))
+            if ~(length(params)==2)
+                treat_error('Wrong input argument to NB/synth');
+            end
+            freq=params(1);
+            bw=params(2);
+        else
+            freq_comp=get(sig,'Freq_comp');
+            freq=get(freq_comp,'Static_value');
+            bw_comp=get(sig,'BW_comp');
+            bw=get(bw_comp,'Static_value');
+        end
+        len=round(samp_rate*(trial_dur/1000));
+        fresHz=1000/trial_dur;
+        stind=floor((freq-bw/2)/fresHz);
+        enind=floor((freq+bw/2)/fresHz);
+        amp=len/2*10^(-5/2);
+        samp_points=sin(2*pi/samp_rate*freq*(1:round(samp_rate*(trial_dur/1000))));
+
+    otherwise
+        treat_error('Wrong input argument to NB/synth');
+end

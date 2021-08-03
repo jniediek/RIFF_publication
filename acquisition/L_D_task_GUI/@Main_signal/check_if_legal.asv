@@ -1,0 +1,24 @@
+function [valid_flag,err]=check_if_legal(m_sig,comp,prop,val)
+if (isempty(val) & strcmp(prop,'Coord_index')==1)%no input in the relevent property
+    valid_flag=1;
+    err='';
+else
+      numeric=str2num(val);
+      if isempty(numeric)
+          valid_flag=0; 
+          err='The input is not a numeric value';
+      else
+        [valid_flag,err]=check_if_legal(comp,prop,numeric);
+    end
+end
+
+    case 'Num_data'
+        if (val<0  | ~isint(val))
+              valid_flag=0; 
+              err='Num_data must be a non negative integer';
+        end
+    case 'Reps'
+        if (val<=0  | ~isint(val))
+              valid_flag=0; 
+              err='Reps must be a positive integer';
+        end    
