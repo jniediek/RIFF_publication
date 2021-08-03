@@ -19,7 +19,7 @@ bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://d
 Note that some parts of the code require the *Curve Fitting Toolbox*, *Parallel Computing Toolbox* and/or the *Statistics and Machine Learning Toolbox*.
 
 ### The control code of the RIFF
-This code shows how the RIFF operates in detail. It is not intended to be run without hardware-specific modifications. It contains the main control programs for both the L/D and St+ tasks and the camera tracker software.
+This code shows how the RIFF operates in detail. It is not intended to be run without hardware-specific modifications. It contains the main control programs for both the L/D and St+ tasks and the camera tracker software. For further information please contact one of the owners.
 
 ### Reproducing figures
 1. Download/clone this repository
