@@ -71,7 +71,7 @@ for ui = 1:length(unitnum)
     title(['unit #',unitnum{ui}]);
 end
 %% relative turn angle sensitive units (5i-l)
-load(fullfile('/GoodmanHome/ana/FIG/methods_paper','data','angle_sensitive_units.mat'));
+load(fullfile('..','data','angle_sensitive_units.mat'));
 binsize = 12;
 unitnum = {'602','102','207','302'}; % we eventually didn't use the data from R5,290620, unit #1, or R7,290420, u #8
 figure('Position', [100, 100, 2000, 600]);
