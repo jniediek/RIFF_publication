@@ -35,3 +35,4 @@ This code shows how the RIFF operates in detail. It is not intended to be run wi
 6. Change the variable `data_location` to the location of the folder `RIFF_data` from the downloaded, unzipped sample session (e.g., `data_location = '~/Downloads/RIFF_data'`)
 7. Change the variable `results_location` to your desired location for the output of results (e.g., `results_location = '~/RIFF_results`). This folder will be created if it does not exist already.
 8. Run the script `main.m`
+9. Diagnostic plots of the results appear in folder `.../RIFF_results/nightRIFF/250721/rat_9/01_Behavior`
