@@ -1,6 +1,0 @@
-function rand_arr=create_random_indices(n)
-
-
-%Arr is array of random numbers whose elements are uniformly distributed in
-%the interval (0,1)
-arr=rand(1,n);

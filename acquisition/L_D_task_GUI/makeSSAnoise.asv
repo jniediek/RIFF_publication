@@ -1,9 +1,0 @@
-function str=makeSSAnoise
-
-fname=ls('c:\maestro_results\soundFiles\'); 
-
-clss=strcat(base,num2str(s));
-clds=strcat(base,num2str(d));
-
-str=[repmat(strcat('clouds/',clds,'.wav',','),[1 p(1)*nseq]) repmat(strcat('clouds/',clss,'.wav',','),[1 p(2)*nseq])];
-str=str(1:end-1);
