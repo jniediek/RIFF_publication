@@ -38,7 +38,7 @@ This code shows how the RIFF operates in detail. It is not intended to be run wi
 9. Diagnostic plots of the results appear in folder `.../RIFF_results/nightRIFF/250721/rat_9/01_Behavior`
 10. Navigate Matlab to the folder `processing/RIFF_player` and open the file `RIFF_player_nightRIFF.m` in the editor
 11. Change the variable `db_h.data.source_dir` (line 67) to the same location as in bullet 7 (`~/RIFF_results`).
-12. Run the script `RIFF_player_nightRIFF.m`. Press the button `load_data` in the upper right corner.
+12. Run the script `RIFF_player_nightRIFF.m`. Press the button `load_data` in the upper left corner.
 13. Once the first frame of the experiment got loaded, right-click anywhere on the dark image area and use the left/right arrows to advance the frames. Use keys 4 and 6 in the numpad to skip 5 frames at once (make sure the NumLock is activated).
 
 ### Processing the rat body directions (requires python framework and CUDA-enabled PC)
