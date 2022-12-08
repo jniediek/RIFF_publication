@@ -1,5 +1,0 @@
-function val= get_edit_fields(signal)
-%   get_edit_fields returns editable fields in signal
-
-global SIGNAL_EDIT_FIELDS;
-val=SIGNAL_EDIT_FIELDS;

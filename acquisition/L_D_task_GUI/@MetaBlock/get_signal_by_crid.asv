@@ -1,7 +1,0 @@
-function sig_coord=get_signal_by_crid(meta,crid)
-line_list=get(meta,'Line_list');
-for k=1:length(line_list)
-    line=get_line(meta,k);
-    signal_list=get(line,'Chan_signals');
-    for q=1:length(signal_list)
-        signal=get
