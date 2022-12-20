@@ -1,5 +1,7 @@
 # Code related to the RIFF
 
+The RIFF is an interactive arena for freely moving rats.
+
 This repository contains code related to the publication
 
 Jankowski M. M., Polterovich A., Kazakov A., Niediek J., Nelken I.: *The RIFF: an automated environment for studying the neural basis of auditory-guided complex behavior*.
@@ -18,15 +20,24 @@ bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://d
 ## Instructions 
 This code was tested on MATLAB 2019b. Note that some parts of the code require the *Curve Fitting Toolbox*, *Parallel Computing Toolbox* and/or the *Statistics and Machine Learning Toolbox* of MATLAB.
 
-### The control code of the RIFF
-This code shows how the RIFF operates in detail. It is not intended to be run without hardware-specific modifications. It contains the main control programs for both the L/D and St+ tasks and the camera tracker software. For further information please contact one of the owners.
+### The control code of the RIFF (`acquisition`)
+This code operates the RIFF. There are four subfolders
 
-### Reproducing figures
+|Folder  |Purpose|
+|--------|-------|
+|`common`| basic modules for interaction with the hardware |
+|`camera_tracker`| controls the ceiling-mounted camera and identifies rat coordinates in real time|
+|`L_D_task_GUI` | main program to run the L/D task |
+|`St+_task_GUI` | main program to run the St+ task |
+
+We created [wiki pages](wiki) that explain how to create a new experiment in the RIFF, based on a modification of the `L_D_task_GUI`.
+
+### Reproducing the figures from the manuscript
 1. Download/clone this repository
 2. Navigate Matlab to the subfolder of the `figures` that you are interested in
 3. Run the main script in that folder, called either `main.m` or similar to the name to the figure.
 
-### Processing sample raw data
+### Processing raw data that was recorded in the RIFF
 1. Download/clone this repository
 2. Download the sample session from figshare: [5 minutes behavioral session](https://doi.org/10.6084/m9.figshare.15082971).
 3. Unzip the downloaded sample session
