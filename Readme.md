@@ -30,7 +30,7 @@ This code operates the RIFF. There are four subfolders
 |`L_D_task_GUI` | main program to run the L/D task |
 |`St+_task_GUI` | main program to run the St+ task |
 
-We created [wiki pages](wiki) that explain how to create a new experiment in the RIFF, based on a modification of the `L_D_task_GUI`.
+We created [wiki pages](../../wiki) that explain how to create a new experiment in the RIFF, based on a modification of the `L_D_task_GUI`.
 
 ### Reproducing the figures from the manuscript
 1. Download/clone this repository
