@@ -32,7 +32,7 @@ This code operates the RIFF. There are four subfolders
 
 We created [wiki pages](../../wiki) that explain how to create a new experiment in the RIFF, based on a modification of the `L_D_task_GUI`.
 
-### Reproducing the figures from the manuscript
+### Reproducing figures from the manuscript
 1. Download/clone this repository
 2. Navigate Matlab to the subfolder of the `figures` that you are interested in
 3. Run the main script in that folder, called either `main.m` or similar to the name to the figure.
