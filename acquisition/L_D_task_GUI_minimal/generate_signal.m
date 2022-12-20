@@ -4,7 +4,7 @@ function  sampled_points=generate_signal(handles,trial_index)
 % points of the given Signal. The number of points is determined by the
 % given samp_rate.
 % params is a collumn vector that holds the signal parameters (including
-% it's Envelope parameters). Among these parameters are :
+% its Envelope parameters). Among these parameters are :
 % start-time of stimulus, end-time of stimulus, ramp-length etc.
 % generate_signal goes over the Envelopes of the Signal and generates the
 % sampled values in order to generate the Envelope.
@@ -14,7 +14,7 @@ function  sampled_points=generate_signal(handles,trial_index)
 
 %synthesising the main signal
 
-points=synth(handles, trial_index);
+points = synth(handles, trial_index);
 stimlist = handles.stimlist;
 
 trial_dur = stimlist.T{trial_index,'trial_dur'};
