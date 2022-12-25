@@ -48,8 +48,13 @@ We created [wiki pages](../../wiki) that explain how to create a new experiment 
 8. Run the script `main.m`
 9. Diagnostic plots of the results appear in folder `.../RIFF_results/nightRIFF/250721/rat_9/01_Behavior`
 12. Run the script `RIFF_player_nightRIFF.m`.
-12. Copy the `~/RIFF_results` path into the `Pipeline output path` input line. Press the button **Load data**.
+12. Copy the `~/RIFF_results` path into the `Pipeline output path` input line in the left upper corner of the GUI. Press the button **Load data**.
 13. Once the first frame of the experiment got loaded, right-click anywhere on the dark image area and use the left/right arrows to advance the frames. Use keys 4 and 6 in the numpad to skip 5 frames at once (make sure the NumLock is activated).
+
+Here is how the exemplar exeperiment is visualized in the RIFF_player:
+
+![image](https://user-images.githubusercontent.com/6910428/209483791-0075d385-6014-4ccc-9c2c-c223cbca2e3a.png)
+
 
 ### Processing the rat body directions (requires python framework and CUDA-enabled PC)
 1. Create new virtual environment (e.g., open anaconda/conda/miniconda command window and type `>> conda create -n RIFF_env python=3.7`)
