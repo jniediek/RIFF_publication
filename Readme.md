@@ -26,7 +26,7 @@ This code operates the RIFF. There are four subfolders
 |Folder  |Purpose|
 |--------|-------|
 |`common`| basic modules for interaction with the hardware |
-|`camera_tracker`| controls the ceiling-mounted camera and identifies rat coordinates in real time|
+|`camera_tracker`| controls the ceiling-mounted camera and extract the rats coordinates in real-time |
 |`L_D_task_GUI` | main program to run the L/D task |
 |`St+_task_GUI` | main program to run the St+ task |
 
@@ -47,9 +47,8 @@ We created [wiki pages](../../wiki) that explain how to create a new experiment 
 7. Change the variable `results_location` to your desired location for the output of results (e.g., `results_location = '~/RIFF_results'`). This folder will be created if it does not exist already.
 8. Run the script `main.m`
 9. Diagnostic plots of the results appear in folder `.../RIFF_results/nightRIFF/250721/rat_9/01_Behavior`
-10. Navigate Matlab to the folder `processing/RIFF_player` and open the file `RIFF_player_nightRIFF.m` in the editor
-11. Change the variable `db_h.data.source_dir` (line 67) to the same location as in bullet 7 (`~/RIFF_results`).
-12. Run the script `RIFF_player_nightRIFF.m`. Press the button **Load data** in the upper left corner.
+12. Run the script `RIFF_player_nightRIFF.m`.
+12. Copy the `~/RIFF_results` path into the `Pipeline output path` input line. Press the button **Load data**.
 13. Once the first frame of the experiment got loaded, right-click anywhere on the dark image area and use the left/right arrows to advance the frames. Use keys 4 and 6 in the numpad to skip 5 frames at once (make sure the NumLock is activated).
 
 ### Processing the rat body directions (requires python framework and CUDA-enabled PC)
@@ -57,6 +56,6 @@ We created [wiki pages](../../wiki) that explain how to create a new experiment 
 2. Activate the newly created environment: `>> conda activate RIFF_env`
 3. Change working directory of the console to `./processing/analysis_pipeline/body_directions/`: `>> cd ./processing/analysis_pipeline/body_directions/`
 4. Install the requirements: `>> pip install -r requirements.txt`
-5. Change the variable `exp_path` in line 152 of `extract_3_points_from_rat_images.py` to the full path of the `RIFF_results` folder.
+5. Change the variable `exp_path` in line 152 of `extract_3_points_from_rat_images.py` to the path of the `RIFF_results` folder.
 6. Run the code by: `>> python extract_3_points_from_rat_images.py`. The code will create a new file `predicted_rat_body_points.mat` in the experiment folder.
 7. Rerun the RIFF_player as in bullets 10-13 of the previous list to visualize he body directions.
