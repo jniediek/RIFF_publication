@@ -47,7 +47,7 @@ We created [wiki pages](../../wiki) that explain how to create a new experiment 
 7. Change the variable `results_location` to your desired location for the output of results (e.g., `results_location = '~/RIFF_results'`). This folder will be created if it does not exist already.
 8. Run the script `main.m`
 9. Diagnostic plots of the results appear in folder `.../RIFF_results/nightRIFF/250721/rat_9/01_Behavior`
-12. Run the script `RIFF_player_nightRIFF.m`.
+12. Run the script `RIFF_player.m`.
 12. Copy the `~/RIFF_results` path into the `Pipeline output path` input line in the left upper corner of the GUI. Press the button **Load data**.
 13. Once the first frame of the experiment got loaded, right-click anywhere on the dark image area and use the left/right arrows to advance the frames. Use keys 4 and 6 in the numpad to skip 5 frames at once (make sure the NumLock is activated).
 
