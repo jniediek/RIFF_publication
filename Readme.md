@@ -38,6 +38,7 @@ We created [wiki pages](../../wiki) that explain how to create a new experiment 
 3. Run the main script in that folder, called either `main.m` or similar to the name to the figure.
 
 ### Processing raw data that was recorded in the RIFF
+***Note: This is the short version. For a more complete description of the raw data, see our [wiki pages](../../wiki).*** 
 1. Download/clone this repository
 2. Download the sample session from figshare: [5 minutes behavioral session](https://doi.org/10.6084/m9.figshare.15082971).
 3. Unzip the downloaded sample session
