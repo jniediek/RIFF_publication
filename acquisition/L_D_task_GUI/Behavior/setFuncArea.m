@@ -1,4 +1,5 @@
 function [areaTable, centData] = setFuncArea(inputvector)
+
 loclen = inputvector(1)-3;
 locx = inputvector(2:loclen/2+1);
 locy = inputvector(loclen/2+2:loclen+1);
@@ -6,10 +7,10 @@ x0 = inputvector(loclen+2); % center x
 y0 = inputvector(loclen+3); % center y
 R = inputvector(loclen+4); % radius
 centData = [x0 y0 R];
+
 r1 = R/8;
-r2 = 3*R/8; %here is the part of the radius that is considered the center
-% the radius in real life is ~80 cm, so 30 out of 80 is like 3/8. When I
-% want 50 cm center I change the 3 to 5, then save.
+r2 = 3*R/8; 
+
 areaTable = table();
 ar = 0;
 

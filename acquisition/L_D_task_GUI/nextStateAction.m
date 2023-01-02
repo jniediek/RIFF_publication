@@ -1,5 +1,5 @@
-function [app,behavDIO,soundinfo]=nextStateAction(app) %MDPState,RATState
-%Night RIFF, phase 3, with memory (to reduce sound playing delays)
+function [app,behavDIO,soundinfo]=nextStateAction(app) 
+
 s = app.MDPState;
 r = app.RATState;
 nAreas = 6;
@@ -8,7 +8,7 @@ soundinfo.toplay=0;
 s.soundIsPlaying=soundIsPlaying(app);
 s.behavior = categorical({'no'});
 
-%--state machine
+
 if s.type=='center' %center area: always plays a random sound that indicates a rewrd state
     %select target area  
     if app.chooseonlyfarareasCheckBox.Value == 1 && s.area
@@ -29,7 +29,6 @@ if s.type=='center' %center area: always plays a random sound that indicates a r
     else
         s.area = randi(nAreas);
     end
-%     s.rewardtype = categorical({'random'});
     rewardInd = find(app.stimdir.type == 'reward' & app.stimdir.area == s.area);
     rewardInd = app.stimdir.stimlistLine(rewardInd);
     behavDIO.action=0;

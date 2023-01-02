@@ -1,2 +1,0 @@
-function CloseAllWav
-PsychPortAudio('Close');
