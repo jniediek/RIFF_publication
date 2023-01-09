@@ -32,12 +32,12 @@ This code operates the RIFF. There are four subfolders
 
 We created [wiki pages](../../wiki) that explain how to create a new experiment in the RIFF, based on a modification of the `L_D_task_GUI`.
 
-### Reproducing figures from the manuscript
+### Reproducing figures from the manuscript (`figures`)
 1. Download/clone this repository
 2. Navigate Matlab to the subfolder of the `figures` that you are interested in
 3. Run the main script in that folder, called either `main.m` or similar to the name to the figure.
 
-### Processing raw data that was recorded in the RIFF
+### Processing raw data that was recorded in the RIFF (`processing`)
 ***Note: This is the short version. For a more complete description of the raw data, see our [wiki pages](../../wiki).*** 
 1. Download/clone this repository
 2. Download the sample session from figshare: [5 minutes behavioral session](https://doi.org/10.6084/m9.figshare.15082971).
