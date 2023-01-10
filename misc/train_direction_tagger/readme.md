@@ -22,7 +22,7 @@ Move the downloaded file into the folder `.\[base]\tagged_dataset\`
 
 ## The training dataset
 
-The training dataset is located at [google drive](https://drive.google.com/file/d/1XdjzcHqCB6wxBliPySgaPZMPE6LqZoVZ/view?usp=share_link)
+The training dataset is located at `.\tagged_dataset\rat_images_augmented_and_tagged.npz`
 This dataset holds 98944 images of rats. We collected 1546 unique images of 4 different rats and augmented them by a factor of x64 in the following manner:
 1. Rotated by 90 degrees (x4)
 2. Flipped vertically (x2)
@@ -36,9 +36,7 @@ An exemplar code to extract the info:
 
 ```
 import numpy as np  
-
-# Download the dataset from our Google Drive and place in './tagged_dataset/'
-db = np.load("./tagged_dataset/rat_images_augmented_and_tagged.npz");  
+db = np.load("./tagged_dataset");  
 
 first_image = db['images][0]  
 head_location_xy = db['locs_head'][0]  
