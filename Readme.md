@@ -16,6 +16,7 @@ bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://d
 | `acquisition`| to operate the RIFF |
 |`figures`| to create the figures in the publication|
 |`processing` |  to process data generated in the RIFF |
+|`misc` |  to train the direction tagger model |
 
 ## Instructions 
 This code was tested on MATLAB 2019b. Note that some parts of the code require the *Curve Fitting Toolbox*, *Parallel Computing Toolbox* and/or the *Statistics and Machine Learning Toolbox* of MATLAB.
