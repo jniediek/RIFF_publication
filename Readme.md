@@ -1,60 +1,67 @@
-# Training framework of the direction extractor model
+# Code related to the RIFF
 
-## Training recipe
+The RIFF is an interactive arena for freely moving rats.
 
-1. Clone this repository
-2. Open console/shell and cd to the folder that contains the `requirements.txt` file.  
-We will denote this folder by `base`.
-3. [Optional] create a new virtual environment with anaconda or Virtualenv
-4. Install the required python modules by executing:  
-`>> pip install -r requirements.txt`
-5. Manually install PyTorch with the adequate CUDA version from:  
-https://pytorch.org/get-started/locally/  
-Note that a CUDA-compatible GPU is required to train the model.
-You can check your CUDA version by executing `nvidia-smi` in your shell.  
-The version is displayed in the top-right corner of the output.  
-On updated setups it will typically be 11.6 or 11.7 as of 01.2023.
-6. Download the training set from: [google drive](https://drive.google.com/file/d/1XdjzcHqCB6wxBliPySgaPZMPE6LqZoVZ/view?usp=share_link)  
-Move the downloaded file into the folder `.\[base]\tagged_dataset\`
-7. Run `train_rat_trainer.py` from the console/shell:  
-`>> train_direction_tagger`
-8. A new folder is expected to appear under `[base]\runs` with the trained model, training statistics and an exemplar tagged movie.
+This repository contains code related to the publication
 
-## The training dataset
+Jankowski M. M., Polterovich A., Kazakov A., Niediek J., Nelken I.: *The RIFF: an automated environment for studying the neural basis of auditory-guided complex behavior*.
 
-The training dataset is located at [google drive](https://drive.google.com/file/d/1XdjzcHqCB6wxBliPySgaPZMPE6LqZoVZ/view?usp=share_link)
-This dataset holds 98944 images of rats. We collected 1546 unique images of 4 different rats and augmented them by a factor of x64 in the following manner:
-1. Rotated by 90 degrees (x4)
-2. Flipped vertically (x2)
-3. Added small gaussian noise to the pixels (x2)
-4. Random pixel shift in any direction (x2)
-5. Added small gaussian noise to the labels (x2)
+bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://doi.org/10.1101/2021.05.25.445564), Preprint 2021.
+ 
 
-Each frame is a 50x50 grayscale matrix encoded with uint8 (the pixel's intensity is a discrete integers in the range [0, 255])
-The dataset also includes the manual labels of the tail, neck and nose location on each image.
-An exemplar code to extract the info:
+## Folder structure
 
-```
-import numpy as np  
+| Folder | Function of scripts |
+|--------|---------|
+| `acquisition`| to operate the RIFF |
+|`figures`| to create the figures in the publication|
+|`processing` |  to process data generated in the RIFF |
 
-# Download the dataset from our Google Drive and place in './tagged_dataset/'
-db = np.load("./tagged_dataset/rat_images_augmented_and_tagged.npz");  
+## Instructions 
+This code was tested on MATLAB 2019b. Note that some parts of the code require the *Curve Fitting Toolbox*, *Parallel Computing Toolbox* and/or the *Statistics and Machine Learning Toolbox* of MATLAB.
 
-first_image = db['images][0]  
-head_location_xy = db['locs_head'][0]  
-neck_location_xy = db['loclocs_necks'][0]  
-tail_location_xy = db['locs_base'][0]  
-```
+### The control code of the RIFF (`acquisition`)
+This code operates the RIFF. There are four subfolders
 
-## The test dataset
+|Folder  |Purpose|
+|--------|-------|
+|`common`| basic modules for interaction with the hardware |
+|`camera_tracker`| controls the ceiling-mounted camera and extract the rats coordinates in real-time |
+|`L_D_task_GUI` | main program to run the L/D task |
+|`St+_task_GUI` | main program to run the St+ task |
 
-We also supply a short sequence of frames that represent several minutes of rat's natural behavior.
-A trained model can be evaluated on this sequence.
+We created [wiki pages](../../wiki) that explain how to create a new experiment in the RIFF, based on a modification of the `L_D_task_GUI`.
 
-The first image can be acquired by:
+### Reproducing figures from the manuscript (`figures`)
+1. Download/clone this repository
+2. Navigate Matlab to the subfolder of the `figures` that you are interested in
+3. Run the main script in that folder, called either `main.m` or similar to the name to the figure.
 
-```
-db = np.load('./tagged_dataset/rat_movie_db_50pix.npz') 
+### Processing raw data that was recorded in the RIFF (`processing`)
+***Note: This is the short version. For a more complete description of the raw data, see our [wiki pages](../../wiki).*** 
+1. Download/clone this repository
+2. Download the sample session from figshare: [5 minutes behavioral session](https://doi.org/10.6084/m9.figshare.15082971).
+3. Unzip the downloaded sample session
+4. Navigate Matlab to the code of this repository and add the folder  `processing` with subfolders to the Matlab path
+5. Navigate Matlab to the folder `processing/analysis_pipeline` and open the file `main.m` in the editor
+6. Change the variable `data_location` to the location of the folder `RIFF_data` from the downloaded, unzipped sample session (e.g., `data_location = '~/Downloads/RIFF_data'`)
+7. Change the variable `results_location` to your desired location for the output of results (e.g., `results_location = '~/RIFF_results'`). This folder will be created if it does not exist already.
+8. Run the script `main.m`
+9. Diagnostic plots of the results appear in folder `.../RIFF_results/nightRIFF/250721/rat_9/01_Behavior`
+12. Run the script `RIFF_player.m`.
+12. Copy the `~/RIFF_results` path into the `Pipeline output path` input line in the left upper corner of the GUI. Press the button **Load data**.
+13. Once the first frame of the experiment got loaded, right-click anywhere on the dark image area and use the left/right arrows to advance the frames. Use keys 4 and 6 in the numpad to skip 5 frames at once (make sure the NumLock is activated).
 
-first_image = db['images'][0]
-```
+Here is how the exemplar exeperiment is visualized in the RIFF_player:
+
+![image](https://user-images.githubusercontent.com/6910428/209483791-0075d385-6014-4ccc-9c2c-c223cbca2e3a.png)
+
+
+### Processing the rat body directions (requires python framework and CUDA-enabled PC)
+1. Create new virtual environment (e.g., open anaconda/conda/miniconda command window and type `>> conda create -n RIFF_env python=3.7`)
+2. Activate the newly created environment: `>> conda activate RIFF_env`
+3. Change working directory of the console to `./processing/analysis_pipeline/body_directions/`: `>> cd ./processing/analysis_pipeline/body_directions/`
+4. Install the requirements: `>> pip install -r requirements.txt`
+5. Change the variable `exp_path` in line 152 of `extract_3_points_from_rat_images.py` to the path of the `RIFF_results` folder.
+6. Run the code by: `>> python extract_3_points_from_rat_images.py`. The code will create a new file `predicted_rat_body_points.mat` in the experiment folder.
+7. Rerun the RIFF_player as in bullets 10-13 of the previous list to visualize he body directions.
