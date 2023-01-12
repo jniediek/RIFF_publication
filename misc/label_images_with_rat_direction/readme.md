@@ -13,3 +13,6 @@ Then the labeled arrays are saved along the original images, allowing to run sup
 6. Right-click to complete the labeling of the current image.
 8. The next image will automatically open, repeat step 4. or stop labeling by skipping to point 9
 9. Press 'save' button to save the current progress into a .mat file with the labels and the metadata of the labeling process.
+
+https://user-images.githubusercontent.com/6910428/212123802-d026db9a-7b49-4a46-8494-5ad0aac2ada9.mp4
+
