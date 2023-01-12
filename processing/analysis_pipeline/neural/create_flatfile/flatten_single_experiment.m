@@ -210,7 +210,7 @@ function flatten_single_experiment(full_exp_path, rat_no)
     
     % Saving the data
 %     save(fullfile(db_h.data.mdata.rat_dir, '..\flat_behav_DB.mat'), '-struct', 'corr_db', '-v7');  % Good for python 'loadmat'
-	if ispc()
+    if ispc()
         save(fullfile(rat_dir, 'flat_behav_DB.mat'), '-struct', 'corr_db', '-nocompression');  % Good for python 'h5py'
     else
         save(fullfile(rat_dir, 'flat_behav_DB.mat'), '-struct', 'corr_db', '-v7.3'); 
