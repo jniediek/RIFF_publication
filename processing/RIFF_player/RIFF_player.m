@@ -837,9 +837,9 @@ function handles = time_window_button_Callback(hObject, ~, handles)
         ap_t_arr = sort(ap_t_arr);
 
         % Plot the behavioral data
-        h_food = scatter(food_t_arr, (1:length(food_t_arr))*0 + 1, s, colors(1, :),...
+        h_food = scatter(food_t_arr, (1:length(food_t_arr))*0 + 1, s, colors(5, :),...
                                       'filled', 'parent', h_ax);
-        h_np = scatter(np_t_arr_on, (1:length(np_t_arr_on))*0 + 2, s, colors(2, :),...
+        h_np = scatter(np_t_arr_on, (1:length(np_t_arr_on))*0 + 2, s, colors(3, :),...
                                       'filled', 'parent', h_ax);
         x_np = zeros(1, length(np_t_arr_on)*3);
         y_np = zeros(1, length(np_t_arr_on)*3);
@@ -850,7 +850,7 @@ function handles = time_window_button_Callback(hObject, ~, handles)
         x_np(3:3:end) = np_t_arr_off;
         y_np(3:3:end) = NaN;
         h_np = plot(x_np, y_np, 'Color', colors(2, :), 'parent', h_ax);
-        h_ap = scatter(ap_t_arr, (1:length(ap_t_arr))*0 + 3, s, colors(3, :),...
+        h_ap = scatter(ap_t_arr, (1:length(ap_t_arr))*0 + 3, s, colors(4, :),...
                                       'filled', 'parent', h_ax);
 
         % Extract the sounds
@@ -870,10 +870,10 @@ function handles = time_window_button_Callback(hObject, ~, handles)
         no_abort_y(3:3:end) = NaN;
 
         % Plot the sound and state data
-        h_sound = scatter(sound_t_arr, (1:length(sound_t_arr))*0 + 5, s, colors(4, :),...
+        h_sound = scatter(sound_t_arr, (1:length(sound_t_arr))*0 + 5, s, colors(2, :),...
                                       'filled', 'parent', h_ax);
-        h_noabort = plot(no_abort_x, no_abort_y, 'color', colors(4, :), 'parent', h_ax);
-        h_state = scatter(state_t_arr, (1:length(state_t_arr))*0 + 6, s, colors(5, :),...
+        h_noabort = plot(no_abort_x, no_abort_y, 'color', colors(2, :), 'parent', h_ax);
+        h_state = scatter(state_t_arr, (1:length(state_t_arr))*0 + 6, s, colors(1, :),...
                                       'filled', 'parent', h_ax);
 
         % Format the figure
