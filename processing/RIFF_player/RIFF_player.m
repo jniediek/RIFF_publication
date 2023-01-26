@@ -1,4 +1,4 @@
-% The toolkit RIFF_player.m replays a single experiments of the RIFF.
+% The toolkit RIFF_player.m simulates a single experiments of the RIFF.
 %
 % Creating date: 21/02/2019     by AlexKaz
 
@@ -28,7 +28,7 @@ function varargout = RIFF_player(varargin)
 
 % Edit the above text to modify the response to help RIFF_player
 
-% Last Modified by GUIDE v2.5 27-Dec-2022 13:19:53
+% Last Modified by GUIDE v2.5 25-Jan-2023 14:18:55
 
 % Begin initialization code - DO NOT EDIT
     gui_Singleton = 1;
@@ -54,8 +54,8 @@ function RIFF_player_OpeningFcn(hObject, ~, handles, varargin)
     global db_h timer_loc
     timer_loc = 0;
     handles.output = hObject;
-    handles.state = struct('db_name', '', 'db_path', '', 'frame_ind', 1, 'traceOn', true,...
-                           'heatmapOn', 0, 'hm_data', [], 'speed_max', 1, 'ImageOn', 1,...
+    handles.state = struct('db_name', '', 'db_path', '', 'frame_ind', 1, 'traceOn', false,...
+                           'heatmapOn', 0, 'hm_data', [], 'speed_max', 1, 'ImageOn', 0,...
                            'sound_UI_on', 0, 'fw_UI_on', 0, 'np_UI_on', 0, 'ap_UI_on', 0, ...
                            'im_bright_fact', 2);
 
@@ -63,12 +63,14 @@ function RIFF_player_OpeningFcn(hObject, ~, handles, varargin)
                              'h_rat_tail_solid', 0, 'h_rat_dot', 0);
                     
     db_h = DB_container();  % create an object of the data handler class
-    
+%     handles.db_h = db_h;
+
     db_h.data.arena_geometrical_db = 'RIFF_int_area_locations_181020.mat';
     handles.h_plots.slider = addlistener(handles.slider, 'Value', 'PostSet' , @slider_Callback);
     guidata(hObject, handles);
     
     handles.figure1.PaperPositionMode = 'auto';
+    hObject.OuterPosition= [1.2000   18.0769  273.2000   73.6154];
 end
 
 function varargout = RIFF_player_OutputFcn(~, ~, handles)
@@ -178,6 +180,12 @@ function handles = replot(handles)
         '%  |  Frame: ' num2str(curr_fr_ind) '  |  Tail:' num2str(handles.state.tail_len)...
         '  |  Time: ' datestr(datenum(0, 0, 0, 0, 0, curr_fr_ind/10),'HH:MM:SS.FFF')]);
     handles.h_plots = h_plots;
+    
+	if handles.video_tick.Value == 1
+        file_name = 'sim_video.tif';
+        frame = getframe(handles.picture_area);
+        imwrite(frame2im(frame), file_name, 'WriteMode', 'append');
+    end
     
     if isfield(db_h.data, 'db_BRat')
         handles.ra_accel_text.String = num2str(db_h.data.db_BRat.accel_vec(curr_fr_ind));
@@ -430,7 +438,6 @@ function load_data_button_Callback(hObject, ~, handles)
         delete(h_wb);
         return;
     end
-    handles.data_origin_text.String = db_h.data.source_dir;
     exp_name = handles.exper_list.String{handles.exper_list.Value};
     rat_no = str2double(handles.rat_no_list.String{handles.rat_no_list.Value});
     exp_date = [handles.day_input_text.String handles.month_input_text.String handles.year_input_text.String];
@@ -480,11 +487,16 @@ function load_data_button_Callback(hObject, ~, handles)
     waitbar(0.55, h_wb, 'Loading neural activity...');
 	[db_h.data.NA_db, db_h.data.NA_mdata, db_h.data.NA_raw_db, db_h.data.NA_big, ...
                         db_h.data.NA_ch_num] = load_NA(rat_dir);
+    if ~isempty(db_h.data.NA_db)  % Enable the NA buttons
+        handles.NA_panel.Visible = true;
+        handles.unit_firing_rate_chbx.Visible = true;
+        handles.single_spikes_chbx.Visible = true;
+    end
     
     waitbar(0.6, h_wb, 'Aligning all events on one t-axis...');
     [db_h.data.SNR_IND_cell_arr, db_h.data.NA_FR_arr] = create_aligned_times(t_sim_times,...
                                                               t_sound, db_h.data.NA_db, t_state);
-    
+
     waitbar(0.9, h_wb, 'Plotting...');
     db_h.data.t_sound = t_sound;
     db_h.data.t_cam_times_inter = t_sim_times;
@@ -531,7 +543,7 @@ function init_GUI(handles)
     handles.slider.Max = frame_n;
     handles.slider.Visible = 'on';
     handles.slider.SliderStep = [min(1/frame_n, 0.001) min(600/frame_n, 0.01)];
-    handles.state.tail_len = 41;
+    handles.state.tail_len = frame_n - 1;
     
 % 	% Bin the images and convert to double
 %     images = db_h.data.image_arr;
@@ -595,7 +607,7 @@ function init_GUI(handles)
     
     % === Store the dbs in handles and replot the arena by invoking the slider callback ===
     guidata(handles.slider, handles);  % Push the changed handles struct     
-	handles.slider.Value = 51;  % The lister will be triggered and call the 'replot' function
+	handles.slider.Value = db_h.data.frame_n;  % The lister will be triggered and call the 'replot' function
 end
 
 function handles = render_background_image(handles)
@@ -632,7 +644,7 @@ function trace_Callback(hObject, ~, handles)
     else % Create trace
         set(handles.message_text, 'String', 'Showing full');
         set(hObject,'String','<html>Show<br>full traj.');
-        state.tail_len = 41;
+        state.tail_len = 100;
     end
     state.traceOn = ~state.traceOn;
     handles.state = state;
@@ -734,12 +746,10 @@ end
 function handles = time_window_button_Callback(hObject, ~, handles)
     global db_h
     frame_ind = handles.state.frame_ind;
-%     if isfield(db_h.data, 'overview_fig') && isvalid(db_h.data.overview_fig(1))
     WIN_SZ = 30;
     WIN_SZ_SHOW = 10;
     if isfield(handles, 'stat_fig') && isvalid(handles.stat_fig(1))
-%         h_ax = db_h.data.overview_fig(1);
-%         h_curr_ind = db_h.data.overview_fig(2);
+
         h_ax = handles.stat_fig(1);
         h_curr_ind = handles.stat_fig(2);
         cam_t = db_h.data.SNR_IND_cell_arr(frame_ind).cam_interp_t;
@@ -747,11 +757,23 @@ function handles = time_window_button_Callback(hObject, ~, handles)
         set(h_curr_ind, 'XData', [cam_t cam_t]);
         xlim(h_ax, [cam_t - WIN_SZ_SHOW, cam_t + WIN_SZ_SHOW]);
         title(h_ax, ['Events around t= ' sprintf('%.2f', cam_t) ' , frame ind: ' num2str(frame_ind)]);
-
+        
+        if isfield(handles, 'NA_fig') && isvalid(handles.NA_fig(1))
+            xlim(handles.NA_fig(1), [cam_t - WIN_SZ_SHOW, cam_t + WIN_SZ_SHOW]);
+            set(handles.NA_fig(1), 'XTick', (cam_t-WIN_SZ_SHOW):2:(cam_t+WIN_SZ_SHOW), 'XTickLabel', -WIN_SZ_SHOW:2:WIN_SZ_SHOW);
+            set(handles.NA_fig(2), 'XData', [cam_t cam_t]);
+        end
+        if isfield(handles, 'NA_fig') && (length(handles.NA_fig) == 3) && isvalid(handles.NA_fig(3))
+            WIN_SZ_SHOW_NA = WIN_SZ_SHOW / 5;
+            xlim(handles.NA_fig(3), [cam_t - WIN_SZ_SHOW_NA/40, cam_t + WIN_SZ_SHOW_NA/40]);
+            set(handles.NA_fig(3), ...
+                'XTick', (cam_t-WIN_SZ_SHOW_NA/40):0.01:(cam_t+WIN_SZ_SHOW_NA/40),...
+                'XTickLabel', (-WIN_SZ_SHOW_NA/40:0.01:WIN_SZ_SHOW_NA/40)*1000);
+        end
         return;
     end
     frame_n = db_h.data.frame_n;
-%     time_frame = 10*10; % The frame is extended
+
     sim_FPS = 10;   % FPS of the simulation, currently = 10 FPS
     start_cam_ind = max(1, frame_ind - WIN_SZ*sim_FPS);
     end_cam_ind = min(frame_n, frame_ind + WIN_SZ*sim_FPS);
@@ -760,115 +782,183 @@ function handles = time_window_button_Callback(hObject, ~, handles)
     start_cam_t = db_h.data.SNR_IND_cell_arr(start_cam_ind).cam_interp_t;
     end_cam_t = db_h.data.SNR_IND_cell_arr(end_cam_ind).cam_interp_t;
     
-    % init new figure
-    h_f = figure('Position', [65, 110, 1500, 200]);
-    h_ax = axes(h_f);
-    s = 20;
-    hold(h_ax, 'on');
-    colors = get(h_ax, 'colororder');
-    h_curr_point = plot([cam_t cam_t], [0 7], 'linewidth', 3, 'color', 'k',...
-                        'parent', h_ax);                                % Plot a thick line at (0,0)
-    h_curr_point.Color(4) = 0.5;
+    % --- init new figure for trial events ---
     rel_cam_t = all_cam_t((all_cam_t <= end_cam_t) & (all_cam_t >= start_cam_t));
-    h_cam = scatter(rel_cam_t, (1:length(rel_cam_t))*0 + 4, s, 'k',...
-                                  'filled', 'marker', 's', 'parent', h_ax);
-    
-    % Extract behavior
-    food_t_arr = [];
-    np_t_arr_on = [];
-    np_t_arr_off = [];
-    ap_t_arr = [];
-    for port_ind = 1:12
-        % Add the food events
-        all_foods = db_h.data.behave_struct.food_timings{port_ind};
-        relev_foods = all_foods((all_foods >= start_cam_t) & (all_foods <= end_cam_t));
-        food_t_arr = [food_t_arr relev_foods'];
-        
-        % Add the airpuff events
-        all_aps = db_h.data.behave_struct.airpuff_timings{port_ind};
-        relev_aps = all_aps((all_aps >= start_cam_t) & (all_aps <= end_cam_t));
-        ap_t_arr = [ap_t_arr relev_aps'];
-        
-        % Add the nosepoke events - they are coupled so must capture both On and Off
-        all_nps = db_h.data.behave_struct.beam_timings{port_ind};
-        all_nps_on = all_nps(1:2:end);
-        all_nps_off = all_nps(2:2:end);
-        relev_nps_on = all_nps_on((all_nps_on >= start_cam_t) & (all_nps_on <= end_cam_t));
-        relev_nps_off = all_nps_off((all_nps_off >= start_cam_t) & (all_nps_off <= end_cam_t));
-        if isempty(relev_nps_on) || isempty(relev_nps_off)
-            continue;
+    if handles.trial_events_chbx.Value == 1
+        h_f = figure('Position', [2, 43, 1920/2, 170]);
+        h_ax = axes(h_f);
+        s = 20;
+        hold(h_ax, 'on');
+        colors = get(h_ax, 'colororder');
+        h_curr_point = plot([cam_t cam_t], [0 7], 'linewidth', 3, 'color', 'k',...
+                            'parent', h_ax);                                % Plot a thick line at (0,0)
+        h_curr_point.Color(4) = 0.5;
+        h_cam = scatter(rel_cam_t, (1:length(rel_cam_t))*0 + 4, s, 'k',...
+                                      'filled', 'marker', 's', 'parent', h_ax);
+
+        % Extract behavior
+        food_t_arr = [];
+        np_t_arr_on = [];
+        np_t_arr_off = [];
+        ap_t_arr = [];
+        for port_ind = 1:12
+            % Add the food events
+            all_foods = db_h.data.behave_struct.food_timings{port_ind};
+            relev_foods = all_foods((all_foods >= start_cam_t) & (all_foods <= end_cam_t));
+            food_t_arr = [food_t_arr relev_foods'];
+
+            % Add the airpuff events
+            all_aps = db_h.data.behave_struct.airpuff_timings{port_ind};
+            relev_aps = all_aps((all_aps >= start_cam_t) & (all_aps <= end_cam_t));
+            ap_t_arr = [ap_t_arr relev_aps'];
+
+            % Add the nosepoke events - they are coupled so must capture both On and Off
+            all_nps = db_h.data.behave_struct.beam_timings{port_ind};
+            all_nps_on = all_nps(1:2:end);
+            all_nps_off = all_nps(2:2:end);
+            relev_nps_on = all_nps_on((all_nps_on >= start_cam_t) & (all_nps_on <= end_cam_t));
+            relev_nps_off = all_nps_off((all_nps_off >= start_cam_t) & (all_nps_off <= end_cam_t));
+            if isempty(relev_nps_on) || isempty(relev_nps_off)
+                continue;
+            end
+            if relev_nps_on(1) > relev_nps_off(1)  % In current time frame ON and OFF can be uneven
+                relev_nps_off = relev_nps_off(2:end);  % Remove first END, if it is before first start
+            end
+            if relev_nps_on(end) > relev_nps_off(end)
+                relev_nps_on = relev_nps_on(1:end-1);
+            end
+
+            np_t_arr_on = [np_t_arr_on relev_nps_on'];
+            np_t_arr_off = [np_t_arr_off relev_nps_off'];
         end
-        if relev_nps_on(1) > relev_nps_off(1)  % In current time frame ON and OFF can be uneven
-            relev_nps_off = relev_nps_off(2:end);  % Remove first END, if it is before first start
-        end
-        if relev_nps_on(end) > relev_nps_off(end)
-            relev_nps_on = relev_nps_on(1:end-1);
-        end
-        
-        np_t_arr_on = [np_t_arr_on relev_nps_on'];
-        np_t_arr_off = [np_t_arr_off relev_nps_off'];
+        food_t_arr = sort(food_t_arr);
+        np_t_arr_on = sort(np_t_arr_on);
+        np_t_arr_off = sort(np_t_arr_off);
+        ap_t_arr = sort(ap_t_arr);
+
+        % Plot the behavioral data
+        h_food = scatter(food_t_arr, (1:length(food_t_arr))*0 + 1, s, colors(5, :),...
+                                      'filled', 'parent', h_ax);
+        h_np = scatter(np_t_arr_on, (1:length(np_t_arr_on))*0 + 2, s, colors(3, :),...
+                                      'filled', 'parent', h_ax);
+        x_np = zeros(1, length(np_t_arr_on)*3);
+        y_np = zeros(1, length(np_t_arr_on)*3);
+        x_np(1:3:end) = np_t_arr_on;
+        y_np(1:3:end) = 2;
+        x_np(2:3:end) = np_t_arr_off;
+        y_np(2:3:end) = 2;
+        x_np(3:3:end) = np_t_arr_off;
+        y_np(3:3:end) = NaN;
+        h_np = plot(x_np, y_np, 'Color', colors(2, :), 'parent', h_ax);
+        h_ap = scatter(ap_t_arr, (1:length(ap_t_arr))*0 + 3, s, colors(4, :),...
+                                      'filled', 'parent', h_ax);
+
+        % Extract the sounds
+        all_sound_t = db_h.data.t_sound;
+        sound_inds = (all_sound_t >= start_cam_t) & (all_sound_t <= end_cam_t);
+        sound_t_arr = all_sound_t(sound_inds);
+        all_state_t = db_h.data.t_state;
+        state_t_arr = all_state_t((all_state_t >= start_cam_t) & (all_state_t <= end_cam_t));
+        no_abort_arr = db_h.data.sound_table.noabort(sound_inds)'/192000 + sound_t_arr;
+        no_abort_x = zeros(1, length(no_abort_arr)*3);
+        no_abort_y = zeros(1, length(no_abort_arr)*3);
+        no_abort_x(1:3:end) = sound_t_arr+0.01;
+        no_abort_y(1:3:end) = 5;
+        no_abort_x(2:3:end) = no_abort_arr;
+        no_abort_y(2:3:end) = 5;
+        no_abort_x(3:3:end) = no_abort_arr;
+        no_abort_y(3:3:end) = NaN;
+
+        % Plot the sound and state data
+        h_sound = scatter(sound_t_arr, (1:length(sound_t_arr))*0 + 5, s, colors(2, :),...
+                                      'filled', 'parent', h_ax);
+        h_noabort = plot(no_abort_x, no_abort_y, 'color', colors(2, :), 'parent', h_ax);
+        h_state = scatter(state_t_arr, (1:length(state_t_arr))*0 + 6, s, colors(1, :),...
+                                      'filled', 'parent', h_ax);
+
+        % Format the figure
+        xlim(h_ax, [cam_t - WIN_SZ_SHOW, cam_t + WIN_SZ_SHOW]);
+        ylim(h_ax, [0 7]);
+        set(h_ax, 'TickDir', 'out', 'YMinorTick', 'off', 'XMinorTick', 'on', ...
+            'XMinorGrid', 'on','XGrid', 'on',...
+            'YTick', [1 2 3 4 5 6], 'YTickLabel', {'food', 'np', 'ap', 'cam', 'sound', 'state'}, ...
+            'XTick', (cam_t-WIN_SZ_SHOW):2:(cam_t+WIN_SZ_SHOW), 'XTickLabel', -WIN_SZ_SHOW:2:WIN_SZ_SHOW, 'FontSize', 11, ...
+            'TitleFontSizeMultiplier', 1.3);
+        title(h_ax, ['NA around t= ' sprintf('%.2f', cam_t) ' , frame ind: ' num2str(frame_ind)]);
+        xlabel(h_ax, 'Rel. time (sec)');
+        ylabel(h_ax, 'Event type');
+    %     tightfig(h_f);
+    %     db_h.data.overview_fig = [h_ax h_curr_point];
+        handles.stat_fig = [h_ax h_curr_point];
     end
-    food_t_arr = sort(food_t_arr);
-    np_t_arr_on = sort(np_t_arr_on);
-    np_t_arr_off = sort(np_t_arr_off);
-    ap_t_arr = sort(ap_t_arr);
     
-    % Plot the behavioral data
-    h_food = scatter(food_t_arr, (1:length(food_t_arr))*0 + 1, s, colors(1, :),...
-                                  'filled', 'parent', h_ax);
-    h_np = scatter(np_t_arr_on, (1:length(np_t_arr_on))*0 + 2, s, colors(2, :),...
-                                  'filled', 'parent', h_ax);
-    x_np = zeros(1, length(np_t_arr_on)*3);
-    y_np = zeros(1, length(np_t_arr_on)*3);
-    x_np(1:3:end) = np_t_arr_on;
-    y_np(1:3:end) = 2;
-    x_np(2:3:end) = np_t_arr_off;
-    y_np(2:3:end) = 2;
-    x_np(3:3:end) = np_t_arr_off;
-    y_np(3:3:end) = NaN;
-    h_np = plot(x_np, y_np, 'Color', colors(2, :), 'parent', h_ax);
-    h_ap = scatter(ap_t_arr, (1:length(ap_t_arr))*0 + 3, s, colors(3, :),...
-                                  'filled', 'parent', h_ax);
-    
-    % Extract the sounds
-    all_sound_t = db_h.data.t_sound;
-    sound_inds = (all_sound_t >= start_cam_t) & (all_sound_t <= end_cam_t);
-    sound_t_arr = all_sound_t(sound_inds);
-    sound_t_arr = sound_t_arr;
-    all_state_t = db_h.data.t_state;
-    state_t_arr = all_state_t((all_state_t >= start_cam_t) & (all_state_t <= end_cam_t));
-    state_t_arr = state_t_arr;
-    no_abort_arr = db_h.data.sound_table.noabort(sound_inds)'/192000 + sound_t_arr;
-    no_abort_x = zeros(1, length(no_abort_arr)*3);
-    no_abort_y = zeros(1, length(no_abort_arr)*3);
-    no_abort_x(1:3:end) = sound_t_arr+0.01;
-    no_abort_y(1:3:end) = 5;
-    no_abort_x(2:3:end) = no_abort_arr;
-    no_abort_y(2:3:end) = 5;
-    no_abort_x(3:3:end) = no_abort_arr;
-    no_abort_y(3:3:end) = NaN;
-    
-    % Plot the sound and state data
-    h_sound = scatter(sound_t_arr, (1:length(sound_t_arr))*0 + 5, s, colors(4, :),...
-                                  'filled', 'parent', h_ax);
-    h_noabort = plot(no_abort_x, no_abort_y, 'color', colors(4, :), 'parent', h_ax);
-    h_state = scatter(state_t_arr, (1:length(state_t_arr))*0 + 6, s, colors(5, :),...
-                                  'filled', 'parent', h_ax);
-                
-    % Format the figure
-    xlim(h_ax, [cam_t - WIN_SZ_SHOW, cam_t + WIN_SZ_SHOW]);
-    ylim(h_ax, [0 7]);
-    set(h_ax, 'TickDir', 'out', 'YMinorTick', 'off', 'XMinorTick', 'on', ...
-        'XMinorGrid', 'on','XGrid', 'on',...
-        'YTick', [1 2 3 4 5 6], 'YTickLabel', {'food', 'np', 'ap', 'cam', 'sound', 'state'}, ...
-        'XTick', (cam_t-WIN_SZ_SHOW):2:(cam_t+WIN_SZ_SHOW), 'XTickLabel', -WIN_SZ_SHOW:2:WIN_SZ_SHOW, 'FontSize', 11, ...
-        'TitleFontSizeMultiplier', 1.3);
-    title(h_ax, ['Time: ' sprintf('%.2f', cam_t) ' seconds    |    frame ind: ' num2str(frame_ind)]);
-    xlabel(h_ax, 'Rel. time (sec)');
-    ylabel(h_ax, 'Event type');
-    tightfig(h_f);
-%     db_h.data.overview_fig = [h_ax h_curr_point];
-    handles.stat_fig = [h_ax h_curr_point];
+    % Open NA figure
+    if ~isempty(db_h.data.NA_db)
+        
+        % === Plot the FR dynamic figure ===
+        
+        if handles.unit_firing_rate_chbx.Value == 1
+            h_f2 = figure();
+            h_ax2 = axes(h_f2);
+            hold(h_ax2, 'on');
+            imagesc(h_ax2, [min(rel_cam_t) max(rel_cam_t)], [1 size(db_h.data.NA_FR_arr, 1)], db_h.data.NA_FR_arr(:, start_cam_ind:end_cam_ind));
+            colormap(h_f2, parula);
+            xlabel(h_ax2, 'time');
+            ylabel(h_ax2, 'Clusters');
+            set(h_ax2, 'TickDir', 'out', 'YMinorTick', 'off', 'XMinorTick', 'on', ...
+                'XMinorGrid', 'on','XGrid', 'on',...
+                'XTick', (cam_t-WIN_SZ_SHOW):2:(cam_t+WIN_SZ_SHOW), 'XTickLabel', -WIN_SZ_SHOW:2:WIN_SZ_SHOW, 'FontSize', 11, ...
+                'TitleFontSizeMultiplier', 1.3);
+            xlim(h_ax2, [cam_t - WIN_SZ_SHOW, cam_t + WIN_SZ_SHOW]);
+            ylim(h_ax2, [0.5 size(db_h.data.NA_FR_arr, 1)+0.5]);
+            set(h_f2, 'position', [1920/2, 43, 1920/2, 170]);
+
+            h_curr_point = plot([cam_t cam_t], [0.5 size(db_h.data.NA_FR_arr, 1)+0.5], 'linewidth', 2, 'color', 'w',...
+                            'parent', h_ax2);
+            h_curr_point.Color(4) = 0.8;
+            handles.NA_fig = [h_ax2 h_curr_point];
+        end
+        
+        
+        % === Plot the single cluster trace ===
+        if handles.single_spikes_chbx.Value == 1
+            NA_WIN_SZ = 2;
+
+            h_f3 = figure('position', [1354, 259, 594, 855]);
+            h_ax3 = axes(h_f3);
+            hold(h_ax3, 'on');
+            [curr_NA, t_lims, ind_lims] = read_NA_raw_data(cam_t, NA_WIN_SZ);
+
+            EXPANSION_FACT = 500;
+            n_samples = diff(ind_lims) + 1;
+            ts = interp1([1 n_samples] , t_lims, 1:n_samples, 'linear', 'extrap');
+            plot(h_ax3, ts, curr_NA + int16(1:32)*EXPANSION_FACT, 'k', 'linewidth', 0.5);
+            hold(h_ax3, 'on');
+
+            % Add the spike detections
+            sp_SNR_ts = db_h.data.NA_db(handles.NA_list.Value).sp_SNR_ts;
+            sp_SNR_ts = sp_SNR_ts((sp_SNR_ts > (cam_t-NA_WIN_SZ)) & (sp_SNR_ts < (cam_t+NA_WIN_SZ)));
+            elec_num = db_h.data.NA_db(handles.NA_list.Value).elec_num;
+
+            hl = plot(h_ax3, sp_SNR_ts, (sp_SNR_ts*0 + elec_num)*EXPANSION_FACT, 'o', ...
+                                            'MarkerSize', 40, 'LineWidth', 2, 'Color', [1, 0, 0]);
+            if ~isempty(hl)
+                hl.Color(4) = 0.3;
+            end
+
+            xlabel(h_ax3, 'Time (ms)');
+            ylabel(h_ax3, 'Electrodes');
+            set(h_ax3, 'TickDir', 'out', 'YMinorTick', 'off', 'XMinorTick', 'on', ...
+                'XMinorGrid', 'on','XGrid', 'on',...
+                'XTick', (cam_t-NA_WIN_SZ/40):0.01:(cam_t+NA_WIN_SZ/40), ...
+                'XTickLabel', (-NA_WIN_SZ/40:0.01:NA_WIN_SZ/40)*1000, 'FontSize', 11, ...
+                'TitleFontSizeMultiplier', 1.3);
+            xlim(h_ax3, [cam_t - NA_WIN_SZ/40, cam_t + NA_WIN_SZ/40]);
+            ylim(h_ax3, [0 33*EXPANSION_FACT]);
+
+            handles.NA_fig = [handles.NA_fig h_ax3];
+        end
+    end
     
 	if ~isempty(hObject)
         guidata(hObject, handles);
@@ -953,9 +1043,30 @@ function jump_buttons_Callback(hObject, ~, handles)
     end
 end
 
+function NA_corr_button_Callback(hObject, ~, handles)
+    global db_h
+    curr_NA_ind = handles.NA_list.Value;
+    if (curr_NA_ind == length(handles.NA_list.String))  % Last list item is sum of all NA
+        db_h.data.curr_traj_c = mean(db_h.data.NA_FR_arr, 1);
+    else
+        db_h.data.curr_traj_c = db_h.data.NA_FR_arr(curr_NA_ind, :);
+    end
+    
+    handles = replot(handles);
+    set(handles.picture_area, 'CLim', [0 max(db_h.data.curr_traj_c)*3/4]); % Rescale the colors to the global activity of the neurons
+    guidata(hObject, handles);
+end
+
 function open_dir_button_Callback(hObject, ~, handles)
     global db_h
     winopen(db_h.data.mdata.rat_dir);
+end
+
+function close_figs_button_Callback(hObject, ~, handles)
+    % Function that closes all
+    set(handles.figure1, 'HandleVisibility', 'off');
+    close all;
+    set(handles.figure1, 'HandleVisibility', 'on');
 end
 
 % ============= Helper functions ==========================
@@ -1002,11 +1113,43 @@ function d = pdist1(arr)
     
 end
 
+function [NA_data, t_lims, ind_lims] = read_NA_raw_data(cam_t, t_bound_sec)
+    % Function read_NA_raw_data read the relevant raw_??_??.mat that holds NA around the input 
+    % cam_t time points, and preprocesses it similarly to the input to the KS.
+    % The data is being read from the RAM, so it is fast.
+    % 
+    % Inputs:
+    %     cam_t - (scalar) - SNR time of a current point (data is to be extracted around it)
+    %     t_bound_sec - (scalar) - positive number representing seconds, defining time window
+    %     [cam_t - ??, cam_t + ?]
+    % 
+    % Outputs:
+    %     NA_data - (Nx16) - Raw data with removed noise
+    %     t_lims - limit times of the segment
+    %     ind_lims - index limits of the segmet,starting from sample 1 of the experiment
+    
+    global db_h
+    NA_data = db_h.data.NA_big;
+    start_t = cam_t - t_bound_sec;
+    end_t = cam_t + t_bound_sec;
+    t_lims = [start_t end_t];
+    
+    [ind_lims] = convert_SNR_t_2_ind_NA_filestarts(t_lims, []);
+    NA_data = NA_data(:, ind_lims(1):ind_lims(2))';
+end
+
 %========================   CreateFunc (Junk)   ===========================
 
 function slider_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
+end
+
+function thr_text_CreateFcn(hObject, ~, ~)
+
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
     end
 end
 
@@ -1339,6 +1482,48 @@ function move_body_quivers_and_point(handles)
                'UData', curr_nose(1) - curr_neck(1), 'VData', curr_nose(2) - curr_neck(2));
 end
 
+function [out_arr] = convert_SNR_t_2_ind_NA_filestarts(snr_ts, inds_arr)
+    % Function convert_SNR_t_2_ind_NA_filestarts interplolates one type of data into the other,
+    % given the known boundary times and indices of the NA_??_??.mat files.
+    % 
+    % The challenge is that the monolythic .bin file with the NA is not linear in time, there are gaps 
+    % between the passive and active sessions.
+    % 
+    % Inputs:
+    %     snr_ts - (Nx1 matrix, or []) - Array of events in SNR times, that should be converted to inds.
+    %     inds_arr - (Nx1 matrix, or []) - Array of events in inds, that should be converted to SNR_t
+    % 
+    % Outputs:
+    %     output_arr - (Nx1 matrix) - An array in the corresponding format.
+    
+    global db_h
+    dt_t_starts = db_h.data.NA_raw_db.fs_arr;  % Array of SNR_t starts of the raw_??_??.mat files
+    dt_ind_starts = db_h.data.NA_raw_db.file_nums;
+    
+    SAMPLE_RATE = 32000;
+    SAMPLES_DT2 = 2^18;
+    
+    out_arr = [];
+    if isempty(snr_ts) && isempty(inds_arr)  % Abort if no input data is provided
+        return;
+    end
+
+    dt_t_ends = dt_t_starts + SAMPLES_DT2/SAMPLE_RATE;             % Computing the TD2 end times
+    dt_t_strt_end = sort([dt_t_starts; dt_t_ends]);      % Creates single array of timestamps for start+stop
+    
+    n_dt2_files = length(dt_ind_starts);
+    dt_strt_inds = (0:(n_dt2_files-1))*SAMPLES_DT2 + 1;   % Indices of DT2 file starts
+    dt_end_inds = dt_strt_inds + SAMPLES_DT2 - 1;    % Marking the indeces of DT2 file ends
+    dt_srtr_end_inds = sort([dt_strt_inds dt_end_inds]);
+    
+    if ~isempty(snr_ts)  % Convert ts to inds
+        out_arr = interp1(dt_t_strt_end, dt_srtr_end_inds, double(snr_ts), 'linear', 'extrap');
+    elseif ~isempty(inds_arr)  % Convert inds to ts
+        out_arr = interp1(dt_srtr_end_inds, dt_t_strt_end, double(inds_arr), 'linear', 'extrap');
+    end
+    out_arr = round(out_arr);
+end
+
 function h_circles = init_sound_rew_circles(h_ax, arena_db_file)
 
     % Adds colored circles to the RIFF in hidden mode, will be shown only once a sound is played
@@ -1427,7 +1612,7 @@ function h_circles = init_sound_rew_circles(h_ax, arena_db_file)
     % ------- Plot the circles and save the handles ---- 
     x = 480;
     y = 25;
-    h_rect = rectangle(h_ax, 'Position', [x, y, 100, 52], ...
+    h_rect = rectangle(h_ax, 'Position', [x, y, 80, 52], ...
                              'FaceColor', [1 1 1]*0.94, ...
                              'EdgeColor', 'w', ...
                               'Curvature', 0.1);
@@ -1459,7 +1644,7 @@ end
 function h_arr = init_sound_text_box(h_ax)
     x = 480;
     y = 85;
-    h_rect_loc = rectangle(h_ax, 'Position', [x, y, 100, 16], ...
+    h_rect_loc = rectangle(h_ax, 'Position', [x, y, 80, 16], ...
                              'FaceColor', [1 1 1]*0.94, ...
                              'EdgeColor', 'w', ...
                               'Curvature', 0.23);
@@ -1467,7 +1652,7 @@ function h_arr = init_sound_text_box(h_ax)
                                 'FontSize', 12, 'FontWeight', 'bold');
                             
     sound_shift_down = 25;
-    h_rect_sound = rectangle(h_ax, 'Position', [x, y+sound_shift_down, 100, 32], ...
+    h_rect_sound = rectangle(h_ax, 'Position', [x, y+sound_shift_down, 80, 32], ...
                              'FaceColor', [1 1 1]*0.94, ...
                              'EdgeColor', 'w', ...
                               'Curvature', 0.12);
@@ -1546,5 +1731,75 @@ function data_dir = read_and_validate_data_dir(handles)
     
     if ~isfolder(data_dir)
         data_dir = -1;
+    end
+end
+%========================   custom (debug) function   ===========================
+
+function Custom_button_Callback(hObject, ~, handles)
+    global db_h
+    if 0
+        msg = inputdlg('enter_name');
+        f_name = "R6_" + db_h.data.mdata.exp_date + "_" + msg;
+        print(f_name + ".eps", '-depsc', '-painters');
+        print(f_name + ".png", '-dpng', '-r300');
+        disp("image files saved as: " + f_name);
+    end
+    if 0
+        dx = [0; diff(db_h.data.loc_arr(:, 1))];
+        dy = [0; diff(db_h.data.loc_arr(:, 2))];
+        
+%         dx = [0; db_h.data.loc_arr(3:end, 1) - db_h.data.loc_arr(1:end-2, 1); 0];
+%         dy = [0; db_h.data.loc_arr(3:end, 2) - db_h.data.loc_arr(1:end-2, 2); 0];
+        
+        [tr_direc, tr_rho] = cart2pol(dx, dy);
+        tr_rho = smooth(tr_rho, 3);
+        
+        db_h.data.dx = dx;
+        db_h.data.dy = dy;
+        db_h.data.tr_direc = tr_direc;
+        db_h.data.tr_rho = tr_rho;
+        
+        handles.message_text.Visible = 'on';
+        msgbox('The allocentric stats were added to db_h.data');
+    end
+    
+    if(0)
+        handles.data.image_arr = (handles.data.image_arr(1:2:end, 1:2:end, :) + ...
+                             handles.data.image_arr(2:2:end, 1:2:end, :) + ...
+                             handles.data.image_arr(1:2:end, 2:2:end, :) + ...
+                             handles.data.image_arr(2:2:end, 2:2:end, :))/4;
+         guidata(hObject, handles);
+    end
+    if(0)
+        init_GUI(handles);
+    end
+    if (0)
+        disp('done!');
+        stats_button_Callback([], [], handles);
+    end
+    if(0)
+        timer_loc = 0;
+    end
+    if 0
+        1;
+        t_init = db_h.data.maestro_states.start_t(db_h.data.maestro_states.type == 'center');
+        types = db_h.data.maestro_states.type;
+        times = db_h.data.maestro_states.start_t;
+        t_ends = t_init*0;
+        counter = 1;
+        for i = 1:(length(types)-1)
+            if (types(i) == 'NPWait') && (types(i+1) == 'wait')
+                t_ends(counter) = times(i+1);
+                counter = counter + 1;
+            end
+        end
+    end
+    
+    if 0
+        analyze_LSTM_results();
+    end
+    
+    if 0
+        db_h.data.curr_traj_c = db_h.data.rat_body_turns;
     end
 end
