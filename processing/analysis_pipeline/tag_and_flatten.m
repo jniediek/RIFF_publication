@@ -2,7 +2,7 @@
 % The variable `expdata` is defined in `main.m`
 
 % Step 1. Run the manual tagger to select noise clusters
-
+tag_KS_clusters
 %%
 
 % Step 2. After tagging, you can create a "flat file" that contains all
