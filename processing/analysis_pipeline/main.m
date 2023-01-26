@@ -24,6 +24,7 @@ expdata = struct();
 
 % For the short sample session without neural data, please
 % use the following settings:
+expdata.experimenter = categorical({'nightRIFF'});
 job_parts.neural = false;
 expdata.has_neural_data = false;
 expdata.do_clustering = false;
@@ -34,6 +35,8 @@ expdata.rat = 9;
 
 % For the long sample session with neural data, please
 % use the following settings:
+
+% expdata.experimenter = categorical({'nightRIFF'});
 % job_parts.neural = true;
 % expdata.has_neural_data = true;
 % expdata.do_clustering = true;
@@ -42,26 +45,18 @@ expdata.rat = 9;
 % expdata.day = 29;
 % expdata.rat = 5;
 
+
+% the following settings are correct for both sample sessions
 expdata.is_new_layout = true;
 expdata.folders.data_location = data_location;
 expdata.folders.outbase = results_location;
 expdata.neural_mode = 'deuteron'; % deuteron or tbsi
 expdata.delete_raw_bin = false;
 expdata.neural_output_type = 'kilosort2';
-expdata.experimenter = categorical({'nightRIFF'});
 
-%%
+
+% The following code actually runs the data analysis
 
 expdata.folders = create_folder_names(expdata);
 expdata = run_from_database(expdata);
 process_rat_folder(expdata.folders.results, expdata.rat, job_parts);
-
-%% The following is intended for sessions with neural data only
-
-% Now run the manual tagger to select noise clusters
-
-%%
-
-% Now create a "flat file" that contains all information from the
-% experiment integrated into one file
-flatten_single_experiment(expdata.folders.results, expdata.rat)
