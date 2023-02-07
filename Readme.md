@@ -19,9 +19,9 @@ bioRxiv 2021.05.25.445564, [https://doi.org/10.1101/2021.05.25.445564](https://d
 |`misc` |  to label rat bodyparts and train the direction tagger model |
 
 ## Instructions 
-This code was tested on MATLAB 2019b. Note that some parts of the code require the *Curve Fitting Toolbox*, *Parallel Computing Toolbox* and/or the *Statistics and Machine Learning Toolbox* of MATLAB.
+Note that some parts of the code require the *Curve Fitting Toolbox*, *Parallel Computing Toolbox* and/or the *Statistics and Machine Learning Toolbox* of MATLAB.
 
-### The control code of the RIFF (`acquisition`)
+### Folder `acquisition`: The control code of the RIFF
 This code operates the RIFF. There are four subfolders
 
 |Folder  |Purpose|
@@ -33,12 +33,12 @@ This code operates the RIFF. There are four subfolders
 
 We created [wiki pages](../../wiki) that explain how to create a new experiment in the RIFF, based on a modification of the `L_D_task_GUI`.
 
-### Reproducing figures from the manuscript (`figures`)
+### Folder `figures`: Reproducing figures from the manuscript
 1. Download/clone this repository
 2. Navigate Matlab to the subfolder of the `figures` that you are interested in
 3. Run the main script in that folder, called either `main.m` or similar to the name to the figure.
 
-### Processing raw data that was recorded in the RIFF (`processing`)
+### Folder `processing`: Processing raw data that was recorded in the RIFF
 ***Note: This is the short version. For a more complete description of the raw data, see our [wiki pages](../../wiki#how-to-analyze-recorded-data-from-the-riff).*** 
 1. Download/clone this repository
 2. Download the sample session from figshare: [5 minutes behavioral session](https://doi.org/10.6084/m9.figshare.15082971).
