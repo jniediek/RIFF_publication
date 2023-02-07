@@ -1,7 +1,28 @@
 % Main script for the RIFF pipeline.
-% Set options in this script, and run it.
+% This script processes data recorded from the RIFF
 
+% For instructions, see https://github.com/jniediek/RIFF_publication/wiki
+
+% We provide two sample recording sessions to illustrate the usage of this
+% code
+
+% 1. A ten minute session without neural recordings
+%    https://figshare.com/ndownloader/files/29001174
+%    385 MB
+
+% 2. A 1.5 hours session with neural recordings
+%    https://drive.google.com/drive/folders/1tahOTfqlI2sV1GFwaklZldCf_2n7rGmu?usp=share_link
+%    Warning: The size of the dataset is 32 GB
+
+
+% In this script, you control which parts of the experiment should be 
+% analyzed. Set your options and run the script.
+
+
+% this is the location of the raw data
 data_location = fullfile('~', 'RIFF_data');
+
+% this is the location where analysis results will be saved
 results_location = fullfile('~', 'RIFF_results');
 
 
@@ -24,7 +45,6 @@ expdata = struct();
 
 % For the short sample session without neural data, please
 % use the following settings:
-
 job_parts.neural = false;
 expdata.experimenter = categorical({'nightRIFF'});
 expdata.has_neural_data = false;
@@ -56,8 +76,11 @@ expdata.delete_raw_bin = false;
 expdata.neural_output_type = 'kilosort2';
 
 
-% The following code actually runs the data analysis
+% The following code invokes the actual data analysis
 
 expdata.folders = create_folder_names(expdata);
 expdata = run_from_database(expdata);
 process_rat_folder(expdata.folders.results, expdata.rat, job_parts);
+
+%% In case of the neural session, you can now continue in the script
+% tag_and_flatten.m
