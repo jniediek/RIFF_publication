@@ -24,8 +24,9 @@ expdata = struct();
 
 % For the short sample session without neural data, please
 % use the following settings:
-expdata.experimenter = categorical({'nightRIFF'});
+
 job_parts.neural = false;
+expdata.experimenter = categorical({'nightRIFF'});
 expdata.has_neural_data = false;
 expdata.do_clustering = false;
 expdata.year = 2021;
@@ -36,8 +37,8 @@ expdata.rat = 9;
 % For the long sample session with neural data, please
 % use the following settings:
 
-% expdata.experimenter = categorical({'nightRIFF'});
 % job_parts.neural = true;
+% expdata.experimenter = categorical({'nightRIFF'});
 % expdata.has_neural_data = true;
 % expdata.do_clustering = true;
 % expdata.year = 2020;
