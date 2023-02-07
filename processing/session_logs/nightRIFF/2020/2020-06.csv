@@ -1,0 +1,2 @@
+Experimenter,Year,Month,Day,Rat,SessionType,SNRFilesStart,SNRFilesStop,CameraFileIndex,BehaviorFileIndex,MaestroTableNo,NeuralFilesStart,NeuralFilesStop,LoggerSN,Sane,DoProcess,Comment
+nightRIFF,2020,6,29,5,Behavior,2,7,1,13,1,1,1000,56,1,1,
