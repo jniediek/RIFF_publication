@@ -57,8 +57,10 @@ Here is how the exemplar exeperiment is visualized in the RIFF_player:
 
 ![image](https://user-images.githubusercontent.com/6910428/209483791-0075d385-6014-4ccc-9c2c-c223cbca2e3a.png)
 
+## Other resources
+We also supply a 90 minute long sample session with neural recordings [here](https://drive.google.com/drive/folders/1tahOTfqlI2sV1GFwaklZldCf_2n7rGmu). See our [wiki pages](../../wiki#how-to-analyze-recorded-data-from-the-riff) for instructions.
 
-### Processing the rat body directions (requires python framework and CUDA-enabled PC)
+## Processing the rat body directions (requires python framework and CUDA-enabled PC)
 1. Create new virtual environment (e.g., open anaconda/conda/miniconda command window and type `>> conda create -n RIFF_env python=3.7`)
 2. Activate the newly created environment: `>> conda activate RIFF_env`
 3. Change working directory of the console to `./processing/analysis_pipeline/body_directions/`: `>> cd ./processing/analysis_pipeline/body_directions/`
