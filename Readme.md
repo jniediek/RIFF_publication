@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/390024608.svg)](https://zenodo.org/badge/latestdoi/390024608)
+
+
 # Code related to the RIFF
 
 The RIFF is an interactive arena for freely moving rats.
