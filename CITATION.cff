@@ -1,0 +1,21 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Jankowski
+    given-names: Maciej M
+    orcid: https://orcid.org/0000-0001-9589-3929
+  - family-names: Polterovich
+    given-names: Ana
+    orcid: https://orcid.org/0000-0001-9274-3343
+  - family-names: Kazakov
+    given-names: Alexander
+  - family-names: Niediek
+    given-names: Johannes
+    orcid: https://orcid.org/0000-0003-3323-2986
+  - family-names: Israel
+    given-names: Nelken
+    orcid: https://orcid.org/0000-0002-6645-107X
+title: RIFF Software v1.0.1
+version: v1.0.1
+date-released: 2023-06-28
+            
