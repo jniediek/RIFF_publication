@@ -10,7 +10,7 @@ This repository contains code related to the publication
 
 Jankowski M. M., Polterovich A., Kazakov A., Niediek J., Nelken I.: An automated, low-latency environment for studying the neural basis of behavior in freely moving rats*.
 
-BMC Biology 21, 172 (2023) [https://doi.org/10.1186/s12915-023-01660-9] (https://doi.org/10.1186/s12915-023-01660-9)
+BMC Biology 21, 172 (2023) [https://doi.org/10.1186/s12915-023-01660-9](https://doi.org/10.1186/s12915-023-01660-9)
 
 ## Folder structure
 
